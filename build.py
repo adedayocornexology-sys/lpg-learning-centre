@@ -8,7 +8,7 @@ every view gets a real URL a parent can be sent or can find on Google.
 
 Run:  python build.py
 """
-import io, os
+import io, os, json, re, datetime
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 
@@ -99,7 +99,14 @@ def steps(*s):
     return '\n        <div class="steps">%s</div>' % "".join(
         '<div class="step"><div><h4>%s</h4><p>%s</p></div></div>' % x for x in s)
 
-def faq(pairs):
+# Questions asked on a page are also the questions asked into a search box, so
+# every FAQ block is registered here and emitted again as FAQPage structured
+# data. One source, two outputs - they cannot drift apart.
+FAQS = {}
+
+def faq(pairs, key=None):
+    if key:
+        FAQS[key] = pairs
     return '\n        <div class="faq">%s</div>' % "".join(
         '<details><summary>%s</summary><p>%s</p></details>' % p for p in pairs)
 
@@ -109,7 +116,12 @@ def know(text, tail=None):
     if tail: out += '\n        <p class="sub" style="margin-top:18px">%s</p>' % tail
     return out
 
-TBD = '<span class="tbd">%s</span>'
+def FAQ_KEYED(key, pairs):
+    """Registers the pairs under `key` and hands them straight back to faq()."""
+    FAQS[key] = pairs
+    return pairs
+
+TBD = '<span class="tbd">%s</span>' 
 
 # ---------------------------------------------------------------- shell
 SHELL = """<!doctype html>
@@ -119,7 +131,23 @@ SHELL = """<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<link rel="icon" href="assets/img/lpg-mark.svg">
+<link rel="canonical" href="{canonical}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LPG Learning Centre">
+<meta property="og:locale" content="en_NG">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{site}/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LPG Learning Centre — Learn, Play &amp; Grow. The future ready school, Festac Town, Lagos">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{site}/assets/img/og.jpg">
+<meta name="theme-color" content="#FFFBF2">
+<link rel="icon" href="assets/img/lpg-mark.svg">{schema}
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="assets/layouts.css">
 </head>
@@ -343,7 +371,7 @@ PAGES['programmes.html'] = dict(id='programmes',
                   "New children are eased in over their first week rather than dropped into a full day."))
          + '\n        ' + QUICK + cta("Book a visit"), band=True)
   + sect(head("Questions", "Before you ask.")
-         + faq([("What ages do you take?",
+         + faq(FAQ_KEYED("programmes", [("What ages do you take?",
                  "Cr&egrave;che through Primary, up to Year 4. Age bands shift slightly by room, so they are "
                  "confirmed on a visit."),
                 ("How big are the classes?",
@@ -355,7 +383,7 @@ PAGES['programmes.html'] = dict(id='programmes',
                  "Yes. Fully air-conditioned, secure spaces are part of what LPG calls world-class comfort."),
                 ("Do you use technology in lessons?",
                  "Every day &mdash; interactive boards and digital tools, used to teach rather than to "
-                 "impress visitors.")])))
+                 "impress visitors.")]))))
 
 # ================================================================= A DAY
 PAGES['a-day.html'] = dict(id='day',
@@ -453,7 +481,7 @@ PAGES['parents.html'] = dict(id='parents',
         ph("3:2", "The seminar room", "Parents seated, presenter at the board. The tea-and-coffee shot "
            "from the last one works well here.", "r5"), flip=True))
   + sect(head("Questions", "What parents ask us.")
-         + faq([("My child struggles to sit still and focus. Should I worry?",
+         + faq(FAQ_KEYED("parents", [("My child struggles to sit still and focus. Should I worry?",
                  "Not necessarily. What looks like a lack of focus is often a child trying to understand "
                  "the world in their own way. We look at how a child learns before anyone calls it a problem."),
                 ("Why does colouring matter so much here?",
@@ -463,7 +491,7 @@ PAGES['parents.html'] = dict(id='parents',
                  "Directly. A word at handover, WhatsApp on 0808 892 4790 for anything that will not wait, "
                  "and Instagram for what the children are actually doing."),
                 ("Can I visit before deciding?",
-                 "Yes, and we would rather you did. Most parents visit twice before they enrol.")]), band=True))
+                 "Yes, and we would rather you did. Most parents visit twice before they enrol.")])), band=True))
 
 # ================================================================= FIND US
 PAGES['find-us.html'] = dict(id='visit',
@@ -496,13 +524,13 @@ PAGES['find-us.html'] = dict(id='visit',
         '<a href="tel:08088924790">' + TEL + 'Call</a>'
         '<a href="https://wa.me/2348088924790">' + WA + 'WhatsApp</a></div></div>'))
   + sect(head("Questions", "Practical things.")
-         + faq([("Is there parking?", "Yes, on site."),
+         + faq(FAQ_KEYED("find-us", [("Is there parking?", "Yes, on site."),
                 ("Can I bring my child along?",
                  "Please do. How they react to the rooms will tell you more than we can."),
                 ("What if I can only come after work?",
                  "Say so when you call and we will arrange something that works."),
                 ("Can I just message instead?",
-                 "Yes &mdash; WhatsApp 0808 892 4790, or send a message on Instagram.")]), band=True))
+                 "Yes &mdash; WhatsApp 0808 892 4790, or send a message on Instagram.")])), band=True))
 
 # ================================================================= WHY LPG
 PAGES['why-lpg.html'] = dict(id='why',
@@ -625,13 +653,13 @@ PAGES['games.html'] = dict(id='games',
              row("It ends in an audience", "The work gets played by other children, which is the part that motivates.")),
          band=True)
   + sect(head("Safety", "How this is kept safe.", "This page shows children&rsquo;s work, never children.")
-         + faq([("What is shown about a child?",
+         + faq(FAQ_KEYED("games", [("What is shown about a child?",
                  "First name and class only. No photograph, no surname, no age and no contact details."),
                 ("Can anyone message my child through this?",
                  "No. There are no accounts, no comments and no messaging anywhere on this page."),
                 ("Can we opt out?",
                  "Yes, at any time, and the game comes down. Nothing is published without a parent "
-                 "saying yes first.")])
+                 "saying yes first.")]))
          + '\n        <p class="sub" style="margin-top:22px">Ready once the first group of children '
            'has something to show.</p>'))
 
@@ -701,11 +729,138 @@ PAGES['careers.html'] = dict(id='careers',
            '<b>0808 892 4790</b>.</p>'
          + '\n        <p class="sub" style="margin-top:14px">LPG is an equal opportunity employer.</p>'))
 
+# ================================================================= SEO surface
+# One place to change when welearnplaygrow.com is pointed at Vercel.
+SITE  = "https://lpg-learning-centre.vercel.app"
+PHONE = "+2348088924790"
+EMAIL = "admin@welearnplaygrow.com"
+
+# The school described once. Every page references it by @id rather than
+# repeating it, which is what lets a search engine read eleven pages as one
+# organisation instead of eleven unrelated documents.
+SCHOOL = {
+    "@type": "School",
+    "@id": SITE + "/#school",
+    "name": "LPG Learning Centre",
+    "alternateName": "Learn Play Grow Learning Centre",
+    "description": "Cr\u00e8che, preschool, nursery and primary school in Festac Town, "
+                   "Amuwo Odofin, Lagos.",
+    "url": SITE + "/",
+    "logo": SITE + "/assets/img/lpg-logo.svg",
+    "image": SITE + "/assets/img/og.jpg",
+    "telephone": PHONE,
+    "email": EMAIL,
+    "address": {"@type": "PostalAddress", "streetAddress": "112 Road, Festac Town",
+                "addressLocality": "Amuwo Odofin", "addressRegion": "Lagos",
+                "addressCountry": "NG"},
+    "openingHoursSpecification": [{"@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00", "closes": "17:00"}],
+    "sameAs": ["https://www.instagram.com/lpg_learn_play_grow/",
+               "https://www.facebook.com/Learnplaygrow"],
+    "areaServed": {"@type": "Place", "name": "Festac Town, Lagos"},
+}
+SCHOOL_REF = {"@id": SITE + "/#school"}
+
+def strip_tags(t):
+    t = re.sub(r"<[^>]+>", "", t)
+    for a, b in [("&rsquo;", "\u2019"), ("&mdash;", "\u2014"), ("&ndash;", "\u2013"),
+                 ("&egrave;", "\u00e8"), ("&amp;", "&"), ("&ldquo;", "\u201c"),
+                 ("&rdquo;", "\u201d"), ("&#8358;", "\u20a6")]:
+        t = t.replace(a, b)
+    return t.strip()
+
+def faq_block(key):
+    return {"@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": strip_tags(q),
+         "acceptedAnswer": {"@type": "Answer", "text": strip_tags(a)}}
+        for q, a in FAQS[key]]}
+
+def path_of(fname):
+    return "" if fname == "index.html" else fname[:-5]   # cleanUrls is on
+
+def breadcrumb(fname, label):
+    items = [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"}]
+    if fname != "index.html":
+        items.append({"@type": "ListItem", "position": 2, "name": strip_tags(label),
+                      "item": SITE + "/" + path_of(fname)})
+    return {"@type": "BreadcrumbList", "itemListElement": items}
+
+def job(title, desc, closes, extra=None):
+    d = {"@type": "JobPosting", "title": title, "description": desc,
+         "datePosted": "2026-08-01", "employmentType": "FULL_TIME",
+         "hiringOrganization": SCHOOL_REF,
+         "jobLocation": {"@type": "Place", "address": SCHOOL["address"]},
+         "applicantLocationRequirements": {"@type": "Country", "name": "Nigeria"},
+         "directApply": False}
+    if closes: d["validThrough"] = closes
+    if extra: d.update(extra)
+    return d
+
+# Extra structured data, per page, beyond the school + breadcrumb every page gets.
+EXTRA = {
+    "programmes.html": lambda: [faq_block("programmes")],
+    "parents.html":    lambda: [faq_block("parents")],
+    "find-us.html":    lambda: [faq_block("find-us")],
+    "games.html":      lambda: [faq_block("games")],
+    "eccd.html":       lambda: [{
+        "@type": "Course",
+        "name": "Early Childhood Care and Development (ECCD) Certification",
+        "description": "A free six-month skills acquisition programme in Early Childhood "
+                       "Care and Development, delivered with the Federal Ministry of "
+                       "Education and the World Bank under the IDEAS-TVET initiative.",
+        "provider": SCHOOL_REF,
+        "isAccessibleForFree": True,
+        "educationalCredentialAwarded": "ECCD certification",
+        "hasCourseInstance": [{"@type": "CourseInstance",
+            "courseMode": "Onsite", "courseWorkload": "P6M",
+            "location": {"@type": "Place", "address": SCHOOL["address"]}}],
+        "offers": [{"@type": "Offer", "price": 0, "priceCurrency": "NGN",
+                    "category": "Free", "availability": "https://schema.org/LimitedAvailability"}],
+    }],
+    "careers.html":    lambda: [
+        job("Mathematics Teacher — Upper Primary",
+            "Festac, Lagos. Strong knowledge of the Upper Primary mathematics curriculum, "
+            "experience teaching pupils at this stage, excellent communication and classroom "
+            "management, and comfort with digital teaching tools and interactive boards.",
+            "2026-09-07"),
+        job("Primary School Teacher",
+            "Festac, Lagos. Teaching a class of pupils and creating engaging lesson plans "
+            "that incorporate technology to enhance student learning.", None),
+    ],
+}
+
 # ---------------------------------------------------------------- write
 if __name__ == "__main__":
+    today = datetime.date.today().isoformat()
     for fname, p in PAGES.items():
-        html = SHELL.format(title=p['title'], desc=p['desc'], id=p['id'],
-                            body=p['body'], arrow=ARROW, panel=PANEL)
+        blocks = [SCHOOL, breadcrumb(fname, p["title"].split("—")[0].split("|")[0])]
+        if fname in EXTRA:
+            blocks += EXTRA[fname]()
+        graph = {"@context": "https://schema.org", "@graph": blocks}
+        schema = ('\n<script type="application/ld+json">%s</script>'
+                  % json.dumps(graph, ensure_ascii=False, separators=(",", ":")))
+        canonical = SITE + "/" + path_of(fname)
+        html = SHELL.format(title=p["title"], desc=p["desc"], id=p["id"],
+                            body=p["body"], arrow=ARROW, panel=PANEL,
+                            canonical=canonical, site=SITE, schema=schema)
         io.open(os.path.join(OUT, fname), "w", encoding="utf-8").write(html)
         print("%-22s %6d bytes" % (fname, len(html)))
-    print("%d pages" % len(PAGES))
+
+    # Home first, then the pages a parent deciding on a school actually needs.
+    PRIORITY = {"index.html": "1.0", "programmes.html": "0.9", "find-us.html": "0.9",
+                "a-day.html": "0.8", "parents.html": "0.8", "eccd.html": "0.8",
+                "why-lpg.html": "0.7", "careers.html": "0.7",
+                "scholarship.html": "0.6", "story.html": "0.5", "games.html": "0.4"}
+    urls = "".join(
+        "  <url><loc>%s/%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>\n"
+        % (SITE, path_of(f), today, PRIORITY.get(f, "0.5"))
+        for f in sorted(PAGES, key=lambda f: -float(PRIORITY.get(f, "0.5"))))
+    io.open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8").write(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n%s</urlset>\n' % urls)
+
+    io.open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8").write(
+        "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % SITE)
+
+    print("%d pages + sitemap.xml + robots.txt" % len(PAGES))

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lpg-learning-centre.vercel.app/sitemap.xml

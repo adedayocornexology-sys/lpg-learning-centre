@@ -1,0 +1,47 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+/* The social preview card. Rendered to PNG at 1200x630 by headless Edge, which
+   is the only way to get their real logo and real typeface into the image —
+   there are no photographs of the school yet, so the card is typographic on
+   purpose rather than by accident. */
+@font-face{font-family:'Baloo 2';src:url('../fonts/baloo-800.woff2') format('woff2');font-weight:800}
+@font-face{font-family:'Baloo 2';src:url('../fonts/baloo-700.woff2') format('woff2');font-weight:700}
+@font-face{font-family:'Outfit';src:url('../fonts/outfit-500.woff2') format('woff2');font-weight:500}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1200px;height:630px;overflow:hidden;background:#FFFBF2;
+  font-family:'Outfit',system-ui,sans-serif;position:relative}
+.pad{position:absolute;inset:0;padding:74px 80px;display:flex;flex-direction:column;justify-content:space-between}
+img.logo{width:290px;display:block}
+h1{font-family:'Baloo 2',sans-serif;font-weight:800;font-size:78px;line-height:.98;
+  letter-spacing:-.03em;color:#1E1B16;max-width:15ch}
+h1 i{font-style:normal}
+.l{color:#1B9E6E}.p{color:#F2742D}.g{color:#F5C81F}
+p.sub{font-size:27px;color:#5B5346;margin-top:20px;font-weight:500}
+.foot{display:flex;align-items:center;gap:14px;font-size:22px;color:#5B5346;font-weight:500}
+.dot{width:9px;height:9px;border-radius:50%;background:#F2742D}
+/* the toy blocks from the hero, flattened - keeps the card recognisably theirs */
+.toys{position:absolute;right:-40px;bottom:-40px;width:430px;height:430px;opacity:.9}
+.blk{position:absolute;border-radius:26px;display:grid;place-items:center;
+  font-family:'Baloo 2',sans-serif;font-weight:800;color:#fff;font-size:60px}
+.b1{width:132px;height:132px;background:#1B9E6E;left:40px;top:120px;transform:rotate(-8deg)}
+.b2{width:146px;height:146px;background:#F2742D;left:158px;top:38px;transform:rotate(6deg)}
+.b3{width:132px;height:132px;background:#F5C81F;left:292px;top:132px;transform:rotate(-4deg)}
+.ball{position:absolute;border-radius:50%}
+.o1{width:76px;height:76px;background:#EC5B8D;left:70px;top:276px}
+.o2{width:52px;height:52px;background:#2C7FB8;left:300px;top:300px}
+</style></head>
+<body>
+  <div class="toys">
+    <div class="blk b1">L</div><div class="blk b2">P</div><div class="blk b3">G</div>
+    <div class="ball o1"></div><div class="ball o2"></div>
+  </div>
+  <div class="pad">
+    <img class="logo" src="img/lpg-logo.svg" alt="">
+    <div>
+      <h1><i class="l">Learn</i>, <i class="p">Play</i> &amp; <i class="g">Grow</i>.</h1>
+      <p class="sub">The future ready school &mdash; Festac Town, Lagos</p>
+    </div>
+    <div class="foot"><span class="dot"></span>Cr&egrave;che &middot; Preschool &middot; Nursery &middot; Primary</div>
+  </div>
+</body></html>
