@@ -1,0 +1,260 @@
+/* ============================================================================
+   LAYOUT SET
+   One grid of identical rounded cards, repeated eleven times, is why every page
+   read the same. These are genuinely different shapes - asymmetric bento, full
+   rows, split panels, stats, posters - so each page gets its own silhouette.
+   ========================================================================= */
+
+/* --- cross-document transitions: the shell holds still, only the content
+       changes. This is what keeps a multi-page site feeling like one app. --- */
+@view-transition { navigation: auto; }
+.side  { view-transition-name: side; }
+.bar   { view-transition-name: bar; }
+.tabs  { view-transition-name: tabs; }
+::view-transition-old(root),
+::view-transition-new(root){ animation-duration:.2s }
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+
+/* --- each document holds exactly one page now, so nothing is hidden --- */
+.page{display:block}
+
+/* ---------------------------------------------------------------- shapes
+   Children's work is not square. Varying the corner geometry across tiles
+   stops a grid reading like a spreadsheet, without inventing a new palette. */
+.r1{border-radius:24px}
+.r2{border-radius:30px 10px 30px 10px}
+.r3{border-radius:30px 30px 30px 6px}
+.r4{border-radius:60px 22px 22px 22px}
+.r5{border-radius:22px 60px 22px 22px}
+
+/* ---------------------------------------------------------------- bento
+   One tile carries the weight, the rest support it. Spans differ on purpose. */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:8px}
+.bento > *{background:var(--white);border:1px solid var(--line);padding:26px;
+  display:flex;flex-direction:column;justify-content:flex-end;min-height:170px}
+.bento .lead{grid-column:span 4;min-height:250px}
+.bento .half{grid-column:span 2}
+.bento .third{grid-column:span 2}
+.bento .two{grid-column:span 3}
+.bento .full{grid-column:span 6}
+.bento h3{font-family:var(--display);font-weight:700;font-size:20px;margin-bottom:7px;letter-spacing:-.01em}
+.bento .lead h3{font-size:clamp(24px,3vw,32px);line-height:1.1;margin-bottom:10px}
+.bento p{color:var(--ink-soft);font-size:14.6px;line-height:1.56}
+.bento .lead p{font-size:16px;max-width:34rem}
+.bento .k{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;
+  color:var(--ink-soft);margin-bottom:auto}
+@media(max-width:860px){
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .bento .lead,.bento .full,.bento .two{grid-column:span 2}
+  .bento .half,.bento .third{grid-column:span 1}
+  .bento > *{min-height:0;padding:22px}
+}
+
+/* ---------------------------------------------------------------- split
+   Text one side, a picture the other. Alternate .flip down a page. */
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,4vw,48px);
+  align-items:center;margin-top:10px}
+.split.flip > :first-child{order:2}
+.split h3{font-family:var(--display);font-weight:700;font-size:clamp(21px,2.6vw,27px);
+  line-height:1.15;margin-bottom:10px;letter-spacing:-.015em}
+.split p{color:var(--ink-soft);font-size:15.5px;line-height:1.62;max-width:34rem}
+.split p + p{margin-top:12px}
+@media(max-width:860px){
+  .split{grid-template-columns:1fr;gap:22px}
+  .split.flip > :first-child{order:0}
+}
+
+/* ---------------------------------------------------------------- rowlist
+   Full-width rows. Reads as a list of substantial things rather than a set of
+   equal-weight cards, so it suits jobs, modules and arguments. */
+.rowlist{display:flex;flex-direction:column;gap:12px;margin-top:8px;counter-reset:rw}
+.row{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;
+  background:var(--white);border:1px solid var(--line);border-radius:26px;padding:22px 26px;
+  transition:border-color .18s,transform .18s}
+.row:hover{border-color:var(--play);transform:translateX(3px)}
+.row .num{counter-increment:rw;font-family:var(--display);font-weight:800;
+  font-size:clamp(28px,4vw,40px);line-height:1;color:var(--line);min-width:1.6em}
+.row .num::before{content:counter(rw,decimal-leading-zero)}
+.row h3{font-family:var(--display);font-weight:700;font-size:19px;margin-bottom:4px}
+.row p{color:var(--ink-soft);font-size:14.6px;line-height:1.55;max-width:44rem}
+.row .end{font-size:13px;font-weight:600;color:var(--ink-soft);white-space:nowrap;
+  background:var(--sand);border-radius:99px;padding:8px 14px}
+@media(max-width:760px){
+  .row{grid-template-columns:auto 1fr;padding:20px}
+  .row .end{grid-column:2;justify-self:start;margin-top:4px}
+}
+
+/* ---------------------------------------------------------------- stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:8px}
+.stat{background:var(--ink);color:#F3ECDD;border-radius:26px;padding:28px}
+.stat:nth-child(2){background:var(--learn);color:#fff}
+.stat:nth-child(3){background:var(--play);color:#fff}
+.stat:nth-child(4){background:var(--sky);color:#fff}
+.stat .big{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,46px);
+  line-height:1;letter-spacing:-.03em;margin-bottom:8px}
+.stat .lab{font-size:14px;line-height:1.5;opacity:.88}
+
+/* ---------------------------------------------------------------- poster
+   A single loud panel. Used once per page at most, or it stops being loud. */
+.poster{background:var(--ink);color:var(--cream);border-radius:34px;
+  padding:clamp(28px,5vw,54px);position:relative;overflow:hidden;margin-top:8px}
+.poster::after{content:"";position:absolute;right:-70px;top:-70px;width:260px;height:260px;
+  border-radius:50%;background:radial-gradient(circle,rgba(242,116,45,.5),transparent 68%)}
+.poster .k{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--grow);margin-bottom:14px}
+.poster h3{font-family:var(--display);font-weight:800;letter-spacing:-.025em;
+  font-size:clamp(26px,4.6vw,44px);line-height:1.06;margin-bottom:14px;max-width:20ch;position:relative}
+.poster p{font-size:16px;line-height:1.62;color:#D9CFBB;max-width:40rem;position:relative}
+.poster .cta{margin-top:24px;position:relative}
+
+/* ---------------------------------------------------------------- stack
+   Overlapping offset cards - deliberately hand-placed, not a neat row. */
+.stack{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:12px}
+.stack > *{background:var(--white);border:1px solid var(--line);padding:26px}
+.stack > :nth-child(odd){transform:rotate(-.5deg)}
+.stack > :nth-child(even){transform:rotate(.6deg)}
+.stack > *:hover{transform:none}
+.stack > *{transition:transform .2s}
+.stack h3{font-family:var(--display);font-weight:700;font-size:20px;margin-bottom:7px}
+.stack p{color:var(--ink-soft);font-size:14.6px;line-height:1.56}
+.stack .n{font-family:var(--display);font-weight:800;font-size:15px;color:#fff;
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;margin-bottom:14px}
+
+/* ============================================================================
+   PHOTO SLOTS
+   Nothing here is a real photograph yet. Each slot states its aspect ratio and
+   what should fill it, so it doubles as the shot list for the school - and a
+   real <img> drops in with no layout change.
+   ========================================================================= */
+.ph{position:relative;display:grid;place-items:center;text-align:center;
+  background:linear-gradient(135deg,var(--sand),#FDEFD2);
+  border:1.5px dashed #E0CDA2;border-radius:26px;overflow:hidden;padding:20px}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph .note{position:relative;max-width:26ch;font-size:13px;line-height:1.5;color:#8A7A5C;font-weight:500}
+.ph .note b{display:block;font-family:var(--display);font-size:14.5px;color:var(--ink-soft);margin-bottom:4px}
+.ph[data-ratio="4:3"]{aspect-ratio:4/3}
+.ph[data-ratio="3:4"]{aspect-ratio:3/4}
+.ph[data-ratio="1:1"]{aspect-ratio:1/1}
+.ph[data-ratio="16:9"]{aspect-ratio:16/9}
+.ph[data-ratio="3:2"]{aspect-ratio:3/2}
+
+/* mosaic: mixed ratios on purpose, so a gallery does not read as a contact sheet */
+.mosaic{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px}
+.mosaic .ph{aspect-ratio:auto}
+.mosaic .a{grid-column:span 2;grid-row:span 2;min-height:330px}
+.mosaic .b{grid-column:span 2;min-height:160px}
+.mosaic .c{grid-column:span 1;min-height:160px}
+.mosaic .d{grid-column:span 3;min-height:190px}
+@media(max-width:820px){
+  .mosaic{grid-template-columns:repeat(2,1fr)}
+  .mosaic .a{grid-column:span 2;grid-row:auto;min-height:220px}
+  .mosaic .b,.mosaic .d{grid-column:span 2;min-height:150px}
+  .mosaic .c{grid-column:span 1;min-height:130px}
+}
+
+/* a caption under a photo slot, for when the picture needs a line of context */
+.cap{font-size:13px;color:var(--ink-soft);margin-top:10px;line-height:1.5}
+
+/* ============================================================================
+   TOP BAR + SIDEBAR TOGGLE
+   The hamburger said "menu" when the control actually shows and hides a panel.
+   A panel-left glyph says what it does, and a tooltip says it in words - so
+   nobody has to click an unlabelled icon to find out what it is.
+   ========================================================================= */
+.bar .wrap{display:flex;align-items:center;gap:12px}
+.bar .brand{margin-right:auto}
+@media(min-width:901px){.bar .brand{margin-right:0}}
+.top-nav{margin-right:auto;gap:2px}      /* nav sits left, the CTA is pushed hard right */
+.bar .cta{flex:none}
+
+.divider{width:1px;height:26px;background:var(--line);flex:none;display:none}
+@media(min-width:901px){.divider{display:block}}
+
+.sidetoggle{background:none;border:none;border-radius:11px;width:38px;height:38px;
+  display:none;place-items:center;cursor:pointer;flex:none;color:var(--ink-soft);
+  transition:background .16s,color .16s}
+.sidetoggle:hover{background:var(--sand);color:var(--ink)}
+.sidetoggle svg{width:20px;height:20px;stroke-width:1.9}
+/* the divider inside the glyph slides to mirror which way the panel will move */
+.sidetoggle .leaf{transition:transform .26s cubic-bezier(.2,.8,.3,1);transform-origin:center}
+#app.narrow .sidetoggle .leaf{transform:translateX(-3.2px)}
+@media(min-width:901px){.sidetoggle{display:grid}}
+
+/* ---------------------------------------------------------------- tooltips */
+.tip{position:relative}
+.tip::after{content:attr(data-tip);position:absolute;z-index:60;
+  background:var(--ink);color:#F3ECDD;font-family:var(--body);font-size:12.5px;
+  font-weight:500;letter-spacing:.01em;padding:7px 11px;border-radius:9px;
+  white-space:nowrap;pointer-events:none;opacity:0;
+  box-shadow:0 12px 26px -14px rgba(30,27,22,.8);
+  transition:opacity .13s .3s,transform .13s .3s}
+.tip:hover::after,.tip:focus-visible::after{opacity:1;transform:none}
+.tip.below::after{top:calc(100% + 9px);left:0;transform:translateY(-3px)}
+.tip.right::after{left:calc(100% + 12px);top:50%;margin-top:-15px;transform:translateX(-3px)}
+@media(prefers-reduced-motion:reduce){.tip::after{transition:opacity .01s}}
+
+/* rail icons explain themselves while collapsed - but not once hovering the rail
+   has already expanded it, or the label and the tooltip would say the same thing */
+.side a::after{display:none}
+#app.narrow .side a.tip::after{display:block}
+#app.narrow .side:hover a.tip::after,
+#app.narrow .side:focus-within a.tip::after{display:none}
+
+/* ============================================================================
+   THE REAL LOGO
+   Taken from welearnplaygrow.com (assets/img/logo/newlogo.svg), cropped to its
+   content and split in two: the full lockup, and the LPG mark on its own for
+   the collapsed rail and the favicon. The invented gradient badge is gone.
+   ========================================================================= */
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer;text-decoration:none;color:inherit}
+.brand img{display:block;height:auto}
+.brand .lock{width:150px}
+.brand .mk{width:42px;display:none}
+.brand .loc{font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-soft);white-space:nowrap}
+
+.side .brand{flex-direction:column;align-items:flex-start;gap:7px;padding:6px 6px 18px}
+.side .brand .lock{width:168px}
+.bar .brand .lock{width:132px}
+.bar .brand .loc{display:none}
+
+/* collapsed rail: only the mark fits, and it grows back on hover with the panel */
+#app.narrow .side .brand .lock,
+#app.narrow .side .brand .loc{display:none}
+#app.narrow .side .brand .mk{display:block}
+#app.narrow .side:hover .brand .lock,
+#app.narrow .side:focus-within .brand .lock{display:block}
+#app.narrow .side:hover .brand .loc,
+#app.narrow .side:focus-within .brand .loc{display:block}
+#app.narrow .side:hover .brand .mk,
+#app.narrow .side:focus-within .brand .mk{display:none}
+@media(max-width:900px){.brand .lock{width:126px}}
+
+/* ---------------------------------------------------------------- links
+   Several controls became real anchors when the site went multi-page. They must
+   still look and behave exactly like the buttons they replaced. */
+a.cta,a.ghost,a.door,.trail a.stop{text-decoration:none}
+a.cta{display:inline-flex;align-items:center;gap:9px}
+a.ghost{display:inline-flex;align-items:center;justify-content:center}
+.door{display:block;color:inherit}
+
+/* ============================================================================
+   BAR: context, not a second navigation
+   The top nav listed the same five destinations the sidebar already shows an
+   inch away. That duplication is what created the dead space between the last
+   link and the call to action. Sidebar navigates; bar says where you are and
+   offers the one action. The breadcrumb moves up into it and earns the room.
+   ========================================================================= */
+@media(min-width:901px){
+  .top-nav{display:none}
+  .trailbar{display:none}                 /* it now lives in the bar */
+  .bar .trail{display:flex;margin-right:auto;padding:0;flex-wrap:nowrap}
+  .bar .trail .stop{font-size:12.5px;padding:6px 13px}
+  .bar .trail .dash{width:26px}
+  .bar .trail .star{width:19px;height:19px;margin-left:7px}
+}
+@media(max-width:900px){
+  .bar .trail{display:none}
+}

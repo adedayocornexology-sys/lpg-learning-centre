@@ -1,0 +1,344 @@
+@font-face{font-family:'Baloo 2';src:url('fonts/baloo-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Baloo 2';src:url('fonts/baloo-800.woff2') format('woff2');font-weight:800;font-display:swap}
+@font-face{font-family:'Outfit';src:url('fonts/outfit-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Outfit';src:url('fonts/outfit-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Outfit';src:url('fonts/outfit-600.woff2') format('woff2');font-weight:600;font-display:swap}
+
+:root{
+  --learn:#1B9E6E; --play:#F2742D; --grow:#F5C81F; --pink:#EC5B8D; --sky:#2C7FB8;
+  --ink:#1E1B16; --ink-soft:#5B5346; --cream:#FFFBF2; --sand:#FFF4D6;
+  --line:#EFE3C6; --white:#fff;
+  --display:'Baloo 2','Trebuchet MS',system-ui,sans-serif;
+  --body:'Outfit','Segoe UI',system-ui,sans-serif;
+  --tab-h:66px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--cream);color:var(--ink);font-family:var(--body);
+  -webkit-font-smoothing:antialiased;overflow:hidden}
+.wrap{width:min(1180px,92%);margin-inline:auto}
+.main{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;overflow-x:hidden}
+
+/* ============ APP SHELL ============
+   The shell never scrolls. Only the view inside it does, which is what separates an
+   app from a long page: the chrome stays put and the content moves under it. */
+#app{height:100dvh;display:flex;flex-direction:column}
+
+/* --- top bar --- */
+.bar{flex:none;background:var(--cream);border-bottom:1px solid transparent;z-index:20;
+  transition:border-color .2s, box-shadow .2s}
+.bar.stuck{border-color:var(--line);box-shadow:0 6px 22px -18px rgba(30,27,22,.5)}
+.bar .wrap{display:flex;align-items:center;gap:24px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto;cursor:pointer}
+.badge{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none;
+  font-family:var(--display);font-weight:800;font-size:15px;color:#fff;
+  background:conic-gradient(from 200deg,var(--play),var(--pink),var(--grow),var(--learn),var(--play))}
+
+.brand .s{display:block;white-space:nowrap;font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-soft);margin-top:3px}
+
+.top-nav{display:flex;gap:4px}
+.top-nav a{background:none;border:none;text-decoration:none;cursor:pointer;font-family:var(--body);font-size:14.5px;font-weight:500;
+  color:var(--ink-soft);padding:9px 14px;border-radius:99px;cursor:pointer;transition:.18s}
+.top-nav a:hover{background:var(--sand);color:var(--ink)}
+.top-nav a.on{background:var(--ink);color:var(--cream)}
+@media(max-width:900px){.top-nav{display:none}}
+
+/* Softer than the old chunky shadow: an app button, not a toy button. */
+.cta{background:var(--play);color:#fff;border:none;border-radius:99px;padding:12px 20px;
+  font-family:var(--body);font-weight:600;font-size:14.5px;cursor:pointer;flex:none;
+  display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 8px 20px -8px rgba(242,116,45,.75);transition:transform .16s, box-shadow .16s}
+.cta:hover{transform:translateY(-1px);box-shadow:0 12px 26px -10px rgba(242,116,45,.85)}
+.cta:active{transform:translateY(1px)}
+/* two identical calls to action two inches apart reads as nagging. the bar's only
+   appears once the hero's has scrolled away. */
+.bar .cta{opacity:0;pointer-events:none;transform:translateY(-6px);transition:.22s}
+.bar.stuck .cta{opacity:1;pointer-events:auto;transform:none}
+.cta svg{width:15px;height:15px}
+@media(max-width:520px){.bar .cta{display:none}}
+
+/* --- sidebar: desktop only. this is what lets the site carry 15 pages without
+   the nav becoming a dropdown maze. mobile keeps the tab bar. --- */
+.side{display:none}
+@media(min-width:901px){
+  #app{flex-direction:row}
+  /* The rail keeps its own footprint in the flex row; the panel inside it is
+     absolutely positioned, so expanding on hover slides OVER the content instead of
+     shoving it sideways. That is the whole trick behind a peek-on-hover sidebar. */
+  .side{display:block;position:relative;width:268px;flex:none;z-index:30;
+    transition:width .26s cubic-bezier(.2,.8,.3,1)}
+  .sidein{position:absolute;inset:0;width:268px;display:flex;flex-direction:column;
+    background:var(--sand);border-right:1px solid var(--line);padding:16px 12px;
+    overflow-y:auto;overflow-x:hidden;
+    transition:width .26s cubic-bezier(.2,.8,.3,1), padding .26s, box-shadow .26s}
+  .bar .brand{display:none}
+  /* collapsed: the rail slides away and the main column takes the room back. open by
+     default - a parent visits a school site four times, not daily, so hiding the map
+     costs more than the space it saves. */
+  /* collapsed: a 64px strip of icons. nothing disappears, so a parent can still
+     see the whole map of the site without opening anything. */
+  #app.narrow .side{width:64px}
+  #app.narrow .sidein{width:64px;padding-left:8px;padding-right:8px}
+  #app.narrow .side:hover .sidein,
+  #app.narrow .side:focus-within .sidein{width:268px;padding-left:12px;padding-right:12px;
+    box-shadow:0 26px 60px -26px rgba(30,27,22,.55);z-index:40}
+  #app.narrow .bar .brand{display:flex}
+
+  /* labels fade rather than reflow, so icons never jump about */
+  .side .lb,.side .grp,.side .brand span:last-child,.side .foot .cta span{
+    transition:opacity .16s;white-space:nowrap}
+  #app.narrow .lb,#app.narrow .grp,#app.narrow .side .brand span:last-child,
+  #app.narrow .side .foot .cta span{opacity:0;pointer-events:none}
+  #app.narrow .side:hover .lb,#app.narrow .side:hover .grp,
+  #app.narrow .side:hover .brand span:last-child,
+  #app.narrow .side:hover .foot .cta span,
+  #app.narrow .side:focus-within .lb,#app.narrow .side:focus-within .grp,
+  #app.narrow .side:focus-within .brand span:last-child,
+  #app.narrow .side:focus-within .foot .cta span{opacity:1;pointer-events:auto}
+  #app.narrow .side button{padding-left:13px;padding-right:13px}
+  /* the full badge is wider than the 64px rail, so it shrinks with the panel */
+  #app.narrow .side .brand{padding-left:3px;gap:0}
+  #app.narrow .side .badge{width:38px;height:38px;border-radius:12px;font-size:12.5px}
+  #app.narrow .side:hover .side .badge,
+  #app.narrow .side:hover .badge{width:52px;height:52px;border-radius:16px;font-size:17px}
+  #app.narrow .side:hover .brand{padding-left:8px;gap:11px}
+  .side .badge{transition:width .26s,height .26s,border-radius .26s,font-size .26s}
+  #app.narrow .side .foot .cta{padding-left:0;padding-right:0}
+}
+.burger{background:none;border:1.5px solid var(--line);border-radius:12px;
+  width:40px;height:40px;display:none;place-items:center;cursor:pointer;flex:none;color:var(--ink)}
+.burger svg{width:19px;height:19px;stroke-width:2.1}
+@media(min-width:901px){.burger{display:grid}}
+.side .brand{display:flex;align-items:center;gap:11px;cursor:pointer;padding:6px 8px 18px}
+
+
+.side .grp{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;
+  color:#A79A81;padding:14px 12px 7px}
+.side a{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;text-decoration:none;
+  font-family:var(--body);font-size:14.5px;font-weight:600;color:var(--ink-soft);
+  padding:11px 12px;border-radius:13px;cursor:pointer;text-align:left;
+  transition:background .16s,color .16s,padding .26s}
+.side a svg{width:19px;height:19px;flex:none;stroke-width:1.9}
+.side a:hover{background:rgba(255,255,255,.75);color:var(--ink)}
+.side a.on{background:var(--white);color:var(--ink);box-shadow:0 8px 18px -14px rgba(30,27,22,.7)}
+.side a.on svg{color:var(--play)}
+.side .grp{overflow:hidden}
+.side .foot{margin-top:auto;padding:16px 8px 6px}
+.side .foot .cta{width:100%;justify-content:center;gap:9px}
+.side .foot .cta svg{flex:none}
+
+/* --- the trail: a breadcrumb a five year old could read. dashed path, round stops,
+   and the hero's star hops to wherever you are. --- */
+.trailbar{position:sticky;top:0;z-index:15;background:var(--cream);
+  padding-top:2px;margin-bottom:2px}
+.trailbar.hide{display:none}
+.trail{display:flex;align-items:center;gap:0;padding:10px 0;position:relative;flex-wrap:wrap}
+.trail .stop{display:flex;align-items:center;gap:8px;background:var(--white);
+  border:1.5px solid var(--line);border-radius:99px;padding:7px 15px;
+  font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;position:relative;z-index:1}
+.trail .stop.here{border-color:var(--play);color:var(--ink);background:#fff}
+.trail .dash{width:34px;height:0;border-top:3px dotted var(--line);margin:0 -2px}
+.trail .star{width:22px;height:22px;margin-left:9px;flex:none;transition:transform .1s}
+.trail .star.hop{animation:hop .55s cubic-bezier(.3,1.4,.4,1)}
+@keyframes hop{
+  0%{transform:translateY(0) rotate(0)}
+  35%{transform:translateY(-15px) rotate(-22deg)}
+  70%{transform:translateY(0) rotate(8deg)}
+  85%{transform:translateY(-4px)}
+  100%{transform:translateY(0) rotate(0)}
+}
+@media(prefers-reduced-motion:reduce){.trail .star.hop{animation:none}}
+
+/* --- the scrolling view --- */
+#view{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  padding-bottom:calc(var(--tab-h) + 20px)}
+@media(min-width:901px){#view{padding-bottom:36px}}
+/* one page per document now; layouts.css re-declares .page as block */
+.page{animation:in .32s cubic-bezier(.2,.8,.3,1)}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* --- bottom tab bar: the single most app-like move on mobile --- */
+.tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tab-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,251,242,.93);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);display:flex;z-index:30}
+@media(min-width:901px){.tabs{display:none}}
+.tabs a{flex:1;background:none;border:none;text-decoration:none;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;cursor:pointer;
+  font-family:var(--body);font-size:10.5px;font-weight:600;color:var(--ink-soft);
+  padding-top:6px;position:relative}
+.tabs a svg{width:22px;height:22px;stroke-width:1.9}
+.tabs a.on{color:var(--play)}
+.tabs a.on::before{content:"";position:absolute;top:0;width:26px;height:3px;border-radius:0 0 4px 4px;background:var(--play)}
+
+/* ============ HERO ============ */
+.hero{padding:clamp(20px,4vw,52px) 0 clamp(30px,5vw,64px)}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(18px,4vw,52px);align-items:center}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+.eyebrow{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.eyebrow span{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;
+  padding:6px 12px;border-radius:99px;background:var(--white);border:1px solid var(--line);color:var(--ink-soft)}
+.spine{font-family:var(--display);font-weight:800;line-height:.94;letter-spacing:-.025em;
+  font-size:clamp(42px,8.6vw,82px);margin-bottom:5px}
+.spine i{font-style:normal}
+.spine .l{color:var(--learn)}.spine .p{color:var(--play)}.spine .g{color:var(--grow)}
+h1{font-family:var(--display);font-weight:700;letter-spacing:-.02em;
+  font-size:clamp(24px,4.2vw,38px);line-height:1.08;margin-bottom:15px;display:inline-block}
+h1 .swipe{position:relative;z-index:1}
+h1 .swipe::before{content:"";position:absolute;left:-4px;right:-4px;bottom:2px;height:.42em;z-index:-1;
+  background:var(--grow);border-radius:3px;transform:scaleX(0);transform-origin:left;
+  animation:swipe .7s .3s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes swipe{to{transform:scaleX(1)}}
+.lede{font-size:clamp(15px,1.7vw,17.5px);line-height:1.62;color:var(--ink-soft);max-width:34rem;margin-bottom:24px}
+.actions{display:flex;flex-wrap:wrap;gap:11px;margin-bottom:22px}
+.ghost{background:transparent;border:2px solid var(--ink);color:var(--ink);border-radius:99px;
+  padding:11px 20px;font-family:var(--body);font-weight:600;font-size:14.5px;cursor:pointer}
+.ghost:hover{background:var(--ink);color:var(--cream)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--line);
+  border-radius:99px;padding:8px 14px;font-size:13px;font-weight:500}
+.pill em{width:8px;height:8px;border-radius:50%;flex:none}
+.scene{position:relative;aspect-ratio:1/1;max-height:460px}
+.scene::before{content:"";position:absolute;inset:4%;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,var(--sand),transparent 68%)}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+
+/* ============ TRUST ============ */
+.trust{background:var(--ink);color:#F1EADC;padding:clamp(20px,3.2vw,32px) 0}
+.trust .wrap{display:grid;grid-template-columns:auto 1fr;gap:clamp(14px,3vw,40px);align-items:center}
+@media(max-width:820px){.trust .wrap{grid-template-columns:1fr;gap:14px}}
+.trust .lbl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#A99C85;line-height:1.6;max-width:19rem}
+.orgs{display:flex;flex-wrap:wrap;align-items:center;gap:9px 24px}
+.orgs b{font-family:var(--display);font-weight:700;font-size:clamp(15px,2vw,21px);color:#fff}
+.orgs .sep{width:5px;height:5px;border-radius:50%;background:var(--grow);flex:none}
+
+/* ============ generic page furniture ============ */
+.sect{padding:clamp(34px,5vw,66px) 0}
+.kick{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--play);margin-bottom:10px}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;
+  line-height:1.1;margin-bottom:12px}
+.sub{color:var(--ink-soft);font-size:16px;line-height:1.6;max-width:40rem;margin-bottom:26px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:20px;
+  transition:transform .18s, box-shadow .18s;cursor:pointer}
+.card:hover{transform:translateY(-3px);box-shadow:0 18px 34px -22px rgba(30,27,22,.55)}
+.card .tag{width:34px;height:6px;border-radius:99px;margin-bottom:14px}
+.card h3{font-family:var(--display);font-weight:700;font-size:20px;margin-bottom:6px}
+.card p{color:var(--ink-soft);font-size:14.5px;line-height:1.55}
+.soon{display:inline-block;margin-top:14px;font-size:12px;font-weight:600;color:var(--ink-soft);
+  background:var(--sand);border-radius:99px;padding:5px 11px}
+
+/* ---- segmented sub-nav: switch content in place instead of scrolling past it ---- */
+.seg{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:22px;
+  padding-bottom:2px}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none;background:var(--white);border:1.5px solid var(--line);color:var(--ink-soft);
+  border-radius:99px;padding:10px 17px;font-family:var(--body);font-weight:600;font-size:14px;
+  cursor:pointer;transition:.18s;white-space:nowrap}
+.seg button.on{background:var(--ink);border-color:var(--ink);color:var(--cream)}
+.panel{display:none;animation:in .26s cubic-bezier(.2,.8,.3,1)}
+.panel.on{display:block}
+.detail{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;
+  background:var(--white);border:1px solid var(--line);border-radius:22px;padding:22px}
+@media(max-width:620px){.detail{grid-template-columns:1fr}}
+.chip{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;flex:none;
+  font-family:var(--display);font-weight:800;font-size:22px;color:#fff}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.facts span{font-size:12.5px;font-weight:600;background:var(--sand);border-radius:99px;padding:6px 12px}
+
+/* ---- quick actions: the phone number as a button, where the intent is ---- */
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
+.quick a{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;
+  background:var(--white);border:1px solid var(--line);border-radius:18px;padding:16px 10px;
+  color:var(--ink);font-weight:600;font-size:13.5px;transition:.18s}
+.quick a:hover{transform:translateY(-2px);box-shadow:0 16px 30px -22px rgba(30,27,22,.6)}
+.quick svg{width:22px;height:22px;stroke-width:1.9}
+
+
+/* ---- day timeline: the rhythm of the day, in their own words ---- */
+.rail{position:relative;padding-left:30px;margin-top:8px}
+.rail::before{content:"";position:absolute;left:9px;top:8px;bottom:14px;width:3px;border-radius:99px;
+  background:repeating-linear-gradient(180deg,var(--line) 0 7px,transparent 7px 15px)}
+.slot{position:relative;padding:0 0 24px}
+.slot::before{content:"";position:absolute;left:-26px;top:4px;width:15px;height:15px;border-radius:50%;
+  background:var(--white);border:3px solid var(--play)}
+.slot .t{font-family:var(--display);font-weight:700;font-size:12.5px;color:var(--play);letter-spacing:.04em;text-transform:uppercase}
+.slot h4{font-family:var(--display);font-weight:700;font-size:18.5px;margin:3px 0 5px}
+.slot p{color:var(--ink-soft);font-size:14.5px;line-height:1.58;max-width:36rem}
+
+/* ---- numbered steps ---- */
+.steps{display:grid;gap:12px;counter-reset:st}
+.step{display:grid;grid-template-columns:auto 1fr;gap:15px;align-items:start;background:var(--white);
+  border:1px solid var(--line);border-radius:18px;padding:18px}
+.step::before{counter-increment:st;content:counter(st);font-family:var(--display);font-weight:800;font-size:16px;
+  color:#fff;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--ink)}
+.step h4{font-family:var(--display);font-weight:700;font-size:17px;margin-bottom:3px}
+.step p{color:var(--ink-soft);font-size:14.5px;line-height:1.55}
+
+/* ---- faq ---- */
+.faq{border-top:1px solid var(--line);margin-top:6px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:16px 36px 16px 0;position:relative;
+  font-family:var(--display);font-weight:700;font-size:16.5px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";position:absolute;right:9px;top:22px;width:9px;height:9px;
+  border-right:2.4px solid var(--play);border-bottom:2.4px solid var(--play);transform:rotate(45deg);transition:transform .22s}
+.faq details[open] summary::after{transform:rotate(-135deg)}
+.faq p{color:var(--ink-soft);font-size:14.8px;line-height:1.62;padding:0 0 18px;max-width:44rem}
+
+/* ---- alternating band, so a long page has a pulse instead of one flat column ---- */
+.band{background:var(--sand);border-block:1px solid var(--line)}
+
+/* ---- "did you know" - lifted straight from their own post series ---- */
+.know{background:#E9F5EE;border:1px solid #C8E4D4;border-radius:22px;padding:24px;max-width:44rem}
+.know .lbl{display:inline-block;background:var(--white);border-radius:99px;padding:7px 15px;
+  font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.03em;margin-bottom:12px}
+.know p{font-size:16px;line-height:1.6;color:#1F4433}
+
+/* ---- tongue twister / trivia: a repeatable content tile ---- */
+.tile{background:var(--white);border:1px solid var(--line);border-radius:22px;padding:24px;max-width:44rem}
+.tile .lbl{font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--play);margin-bottom:10px}
+.tile blockquote{font-family:var(--display);font-weight:700;font-size:clamp(18px,2.4vw,23px);
+  line-height:1.4;letter-spacing:-.01em}
+.tile cite{display:block;font-style:normal;font-size:13.5px;color:var(--ink-soft);margin-top:12px}
+
+/* ---- two doors: parents and trainee teachers are different people ---- */
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+@media(max-width:760px){.doors{grid-template-columns:1fr}}
+.door{text-align:left;background:var(--white);border:1.5px solid var(--line);border-radius:22px;padding:26px;
+  cursor:pointer;font-family:var(--body);transition:border-color .18s,transform .18s}
+.door:hover{border-color:var(--play);transform:translateY(-2px)}
+.door .k{font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--ink-soft)}
+.door h3{font-family:var(--display);font-weight:700;font-size:22px;margin:8px 0 6px}
+.door p{color:var(--ink-soft);font-size:14.5px;line-height:1.55}
+.door .arw{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-weight:600;font-size:14.5px;color:var(--play)}
+.door .arw svg{width:17px;height:17px}
+
+/* ---- small facts row ---- */
+.tbd{display:inline-block;font-size:12px;font-weight:600;color:var(--ink-soft);background:var(--white);
+  border:1px dashed var(--line);border-radius:99px;padding:5px 11px;margin-top:10px}
+
+/* ============ visit sheet — app pattern, not a page ============ */
+.scrim{position:fixed;inset:0;background:rgba(30,27,22,.5);opacity:0;pointer-events:none;
+  transition:opacity .28s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--cream);
+  border-radius:26px 26px 0 0;padding:10px 0 calc(24px + env(safe-area-inset-bottom));
+  transform:translateY(101%);transition:transform .34s cubic-bezier(.2,.8,.3,1);
+  max-height:88dvh;overflow-y:auto;box-shadow:0 -20px 50px -24px rgba(30,27,22,.6)}
+.sheet.on{transform:none}
+/* the desktop sheet floats 26px off the bottom, so translating by its own height
+   alone leaves that 26px gap showing. push it the extra distance. */
+@media(min-width:901px){.sheet{left:50%;right:auto;width:520px;
+  transform:translate(-50%,calc(100% + 40px));
+  border-radius:26px;bottom:26px}.sheet.on{transform:translate(-50%,0)}}
+.handle{width:42px;height:4.5px;border-radius:99px;background:var(--line);margin:4px auto 16px}
+.sheet .wrap{width:min(520px,88vw)}
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.f label{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+.f input,.f select{font-family:var(--body);font-size:15.5px;padding:13px 14px;border-radius:14px;
+  border:1.5px solid var(--line);background:var(--white);color:var(--ink)}
+.f input:focus,.f select:focus{outline:none;border-color:var(--play)}
+.sheet .cta{width:100%;justify-content:center;padding:15px}
+.fine{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:12px;line-height:1.5}

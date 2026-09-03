@@ -1,0 +1,26 @@
+# build scratch
+_old_app.js
+*.bak.html
+
+# superseded single-file prototypes (kept locally, not part of the site)
+app-v3.html
+app-v3.bak.html
+hero-v2.html
+
+# working screenshots
+shot-*.png
+
+# client material that must never reach a public repo:
+# photographs of children, consent forms, anything with a family's details
+photos/
+consent/
+private/
+*.pdf
+
+# os
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# scraper scratch
+.firecrawl/
