@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<style>
+/* LPG's own palette, taken off their logo. No external fonts: the Apps Script
+   sandbox is not a place to depend on a CDN, and this has to load on a phone
+   on mobile data in Festac. */
+:root{
+  --learn:#1B9E6E; --play:#F2742D; --grow:#F5C81F; --pink:#EC5B8D; --sky:#2C7FB8;
+  --ink:#1E1B16; --soft:#5B5346; --cream:#FFFBF2; --sand:#FFF4D6; --line:#EFE3C6;
+  --font:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:var(--font);
+  -webkit-font-smoothing:antialiased;padding:0 0 60px}
+.wrap{width:min(880px,92%);margin:0 auto}
+
+header{padding:26px 0 18px;border-bottom:1px solid var(--line);margin-bottom:26px}
+.mark{display:flex;align-items:baseline;gap:3px;font-weight:800;font-size:30px;letter-spacing:-.02em}
+.mark .l{color:var(--play)} .mark .p{color:var(--grow)} .mark .g{color:var(--learn)}
+.mark span.t{font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--soft);
+  text-transform:uppercase;margin-left:9px;align-self:center;line-height:1.25}
+h1{font-size:clamp(22px,3.4vw,29px);letter-spacing:-.02em;margin:18px 0 8px}
+.lede{color:var(--soft);font-size:15.5px;line-height:1.6;max-width:52ch}
+
+h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);
+  margin:32px 0 12px;font-weight:700}
+
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:11px}
+.slot{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:16px;
+  padding:16px;cursor:pointer;transition:border-color .16s,transform .16s}
+.slot:hover{border-color:var(--play)}
+.slot.on{border-color:var(--play);box-shadow:0 0 0 3px rgba(242,116,45,.16)}
+.slot .pg{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--play)}
+.slot h3{font-size:16px;margin:5px 0 5px}
+.slot p{font-size:13.2px;line-height:1.5;color:var(--soft)}
+.slot input{position:absolute;opacity:0;pointer-events:none}
+
+.field{margin-top:16px}
+label.lbl{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+input[type=text],textarea{width:100%;font-family:var(--font);font-size:15px;padding:12px 14px;
+  border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+textarea{min-height:78px;resize:vertical}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--play)}
+
+#drop{margin-top:14px;border:2px dashed #E0CDA2;border-radius:18px;background:var(--sand);
+  padding:30px 20px;text-align:center;cursor:pointer;transition:background .16s,border-color .16s}
+#drop.hot{background:#FDEFD2;border-color:var(--play)}
+#drop b{display:block;font-size:16px;margin-bottom:5px}
+#drop span{font-size:13.5px;color:var(--soft)}
+#picked{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.row{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid var(--line);
+  border-radius:12px;padding:10px 13px;font-size:13.6px}
+.row .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .sz{color:var(--soft);font-size:12.5px;flex:none}
+.row .st{font-size:12px;font-weight:700;flex:none}
+.st.wait{color:var(--soft)} .st.go{color:var(--sky)}
+.st.ok{color:var(--learn)} .st.bad{color:#C4342B}
+
+.consent{margin-top:22px;background:#E9F5EE;border:1px solid #C8E4D4;border-radius:16px;padding:18px}
+.consent label{display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-size:14.5px;line-height:1.55}
+.consent input{margin-top:3px;width:18px;height:18px;accent-color:var(--learn);flex:none}
+.consent .why{font-size:13px;color:#3D6B55;margin-top:9px;padding-left:29px;line-height:1.55}
+
+button.send{margin-top:22px;background:var(--play);color:#fff;border:none;border-radius:99px;
+  padding:15px 30px;font-family:var(--font);font-size:16px;font-weight:600;cursor:pointer;
+  box-shadow:0 5px 0 #C85C1E;transition:transform .1s,box-shadow .1s}
+button.send:active{transform:translateY(3px);box-shadow:0 2px 0 #C85C1E}
+button.send:disabled{background:#D9CFBB;box-shadow:0 5px 0 #C4B9A3;cursor:not-allowed}
+#msg{margin-top:14px;font-size:14.5px;line-height:1.55}
+#msg.good{color:var(--learn)} #msg.bad{color:#C4342B}
+footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--soft);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="mark"><span class="l">L</span><span class="p">P</span><span class="g">G</span>
+      <span class="t">Learn Play Grow<br>Learning Centre</span></div>
+  </header>
+
+  <h1>Send us photographs for the website</h1>
+  <p class="lede">Pick what the picture shows, add the file, and it comes straight to us.
+    You do not need a Google account and nothing is posted anywhere automatically —
+    everything is reviewed before it goes on the site.</p>
+
+  <h2>1 · What does the picture show?</h2>
+  <div class="slots" id="slots"></div>
+
+  <h2>2 · The photographs</h2>
+  <div id="drop">
+    <b>Tap to choose photos</b>
+    <span>or drag them here · JPG or PNG · up to 10MB each</span>
+    <input type="file" id="file" accept="image/*" multiple hidden>
+  </div>
+  <div id="picked"></div>
+
+  <h2>3 · About you</h2>
+  <div class="field">
+    <label class="lbl" for="sender">Your name</label>
+    <input type="text" id="sender" placeholder="e.g. Mrs Funke">
+  </div>
+  <div class="field">
+    <label class="lbl" for="note">Anything we should know? (optional)</label>
+    <textarea id="note" placeholder="e.g. This is the Nursery 2 circle time, taken this morning."></textarea>
+  </div>
+
+  <div class="consent">
+    <label>
+      <input type="checkbox" id="consent">
+      <span>I confirm that written parental consent has been given for every child
+        who appears in these photographs, and that it covers use on the school website.</span>
+    </label>
+    <p class="why">We cannot publish a child's face without this. If you are not sure for a
+      particular photo, please send the ones you are sure about and hold the rest back —
+      it is much easier than taking something down later.</p>
+  </div>
+
+  <button class="send" id="send" disabled>Send photographs</button>
+  <p id="msg"></p>
+
+  <footer>
+    Photographs sent here are used only on LPG's own website and are never passed to anyone else.
+    Tell us at any time if you want something removed and it comes down.
+  </footer>
+</div>
+
+<script>
+var slots = [], chosen = null, files = [];
+
+google.script.run.withSuccessHandler(function (s) {
+  slots = s;
+  var el = document.getElementById('slots');
+  el.innerHTML = s.map(function (x, i) {
+    return '<div class="slot" data-i="' + i + '">' +
+      '<div class="pg">' + x.page + '</div><h3>' + x.title + '</h3><p>' + x.brief + '</p></div>';
+  }).join('');
+  el.addEventListener('click', function (e) {
+    var card = e.target.closest('.slot'); if (!card) return;
+    [].forEach.call(el.querySelectorAll('.slot'), function (c) { c.classList.remove('on'); });
+    card.classList.add('on');
+    chosen = slots[+card.dataset.i];
+    refresh();
+  });
+}).getSlots();
+
+var drop = document.getElementById('drop');
+var input = document.getElementById('file');
+drop.addEventListener('click', function () { input.click(); });
+['dragenter', 'dragover'].forEach(function (t) {
+  drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add('hot'); });
+});
+['dragleave', 'drop'].forEach(function (t) {
+  drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.remove('hot'); });
+});
+drop.addEventListener('drop', function (e) { add(e.dataTransfer.files); });
+input.addEventListener('change', function () { add(input.files); });
+
+function add(list) {
+  for (var i = 0; i < list.length; i++) {
+    var f = list[i];
+    if (!/^image\//.test(f.type)) continue;
+    if (f.size > 10 * 1024 * 1024) { say('“' + f.name + '” is over 10MB — please send a smaller copy.', false); continue; }
+    files.push({ file: f, state: 'wait' });
+  }
+  paint(); refresh();
+}
+
+function paint() {
+  document.getElementById('picked').innerHTML = files.map(function (r, i) {
+    var cls = r.state === 'ok' ? 'ok' : r.state === 'bad' ? 'bad' : r.state === 'go' ? 'go' : 'wait';
+    var txt = r.state === 'ok' ? 'Sent' : r.state === 'bad' ? 'Failed' : r.state === 'go' ? 'Sending…' : 'Ready';
+    return '<div class="row"><span class="nm">' + r.file.name + '</span>' +
+      '<span class="sz">' + Math.round(r.file.size / 1024) + ' KB</span>' +
+      '<span class="st ' + cls + '">' + txt + '</span></div>';
+  }).join('');
+}
+
+function refresh() {
+  document.getElementById('send').disabled =
+    !(chosen && files.length && document.getElementById('consent').checked);
+}
+document.getElementById('consent').addEventListener('change', refresh);
+
+function say(t, good) {
+  var m = document.getElementById('msg');
+  m.textContent = t; m.className = good ? 'good' : 'bad';
+}
+
+document.getElementById('send').addEventListener('click', function () {
+  var btn = this; btn.disabled = true;
+  var sender = document.getElementById('sender').value;
+  var note = document.getElementById('note').value;
+  var queue = files.filter(function (r) { return r.state !== 'ok'; });
+  var done = 0, failed = 0;
+
+  // One file per request, in sequence. A phone on mobile data drops a big
+  // parallel batch; it rarely drops one small request at a time.
+  (function next(i) {
+    if (i >= queue.length) {
+      paint();
+      say(failed ? (done + ' sent, ' + failed + ' failed. Please try the failed ones again.')
+                 : ('Thank you — ' + done + ' photograph' + (done === 1 ? '' : 's') + ' received.'), !failed);
+      files = files.filter(function (r) { return r.state !== 'ok'; });
+      paint(); refresh();
+      return;
+    }
+    var rec = queue[i];
+    rec.state = 'go'; paint();
+    var reader = new FileReader();
+    reader.onload = function () {
+      var b64 = reader.result.split(',')[1];
+      google.script.run
+        .withSuccessHandler(function (res) {
+          rec.state = res && res.ok ? 'ok' : 'bad';
+          if (res && res.ok) { done++; } else { failed++; }
+          paint(); next(i + 1);
+        })
+        .withFailureHandler(function () { rec.state = 'bad'; failed++; paint(); next(i + 1); })
+        .uploadFile({
+          slotId: chosen.id, name: rec.file.name, mimeType: rec.file.type,
+          data: b64, sender: sender, note: note, consent: true
+        });
+    };
+    reader.onerror = function () { rec.state = 'bad'; failed++; paint(); next(i + 1); };
+    reader.readAsDataURL(rec.file);
+  })(0);
+});
+</script>
+</body>
+</html>
