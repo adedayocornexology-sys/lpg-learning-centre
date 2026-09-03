@@ -24,3 +24,8 @@ desktop.ini
 
 # scraper scratch
 .firecrawl/
+
+.vercel
+
+# vercel link
+.vercel/
