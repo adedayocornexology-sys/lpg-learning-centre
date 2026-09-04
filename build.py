@@ -704,7 +704,7 @@ PAGES['careers.html'] = dict(id='careers',
         row("Mathematics Teacher &mdash; Upper Primary",
             "Festac, Lagos. Strong subject knowledge, experience teaching Upper Primary pupils, "
             "excellent communication and classroom management, and comfort with digital teaching tools.",
-            "Deadline 7 Sept 2026"),
+            '<span data-deadline="2026-09-07">Deadline 7 Sept 2026</span>'),
         row("Primary School Teacher",
             "Festac, Lagos. Teaching a class of pupils, responsible for creating engaging lesson "
             "plans that incorporate technology to enhance student learning.",
@@ -716,8 +716,13 @@ PAGES['careers.html'] = dict(id='careers',
                 card("play", "Upper Primary experience", "You have taught pupils at this stage before.", "r3"),
                 card("sky", "Classroom management", "Excellent communication, and a room you can hold.", "r2"),
                 card("grow", "Tech-savvy", "Comfortable with digital teaching tools and interactive boards.", "r3"))
-         + '\n        <p class="sub" style="margin-top:22px"><b>Deadline: 7 September 2026.</b> '
-           'Send a CV to <b>admin@welearnplaygrow.com</b>.</p>'
+         + '\n        <p class="sub" style="margin-top:22px" data-deadline="2026-09-07">'
+           '<b>Deadline: 7 September 2026.</b> Send a CV to '
+           '<b>admin@welearnplaygrow.com</b>.</p>'
+         + '\n        <p class="sub" style="margin-top:22px;display:none" data-deadline-passed>'
+           '<b>Applications for this role have closed.</b> If you teach mathematics and would '
+           'like to be considered when the school next recruits, send a CV to '
+           '<b>admin@welearnplaygrow.com</b> anyway.</p>'
          + '\n        <div class="quick">'
            '<a href="mailto:admin@welearnplaygrow.com">' + MAIL + 'Email your CV</a>'
            '<a href="https://wa.me/2348088924790">' + WA + 'WhatsApp</a>'

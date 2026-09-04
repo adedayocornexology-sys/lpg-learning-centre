@@ -230,3 +230,31 @@ if (cv) {
   addEventListener('resize', size);
   size(); tick();
 }
+
+/* ============================================================================
+   Deadlines expire by themselves.
+   A static site has no idea what day it is unless you tell it. Without this the
+   careers page would still be advertising "Deadline: 7 September" on the 8th,
+   which wastes a teacher's afternoon and makes the school look careless.
+   ========================================================================= */
+(function expireDeadlines() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  document.querySelectorAll("[data-deadline]").forEach((el) => {
+    const on = new Date(el.getAttribute("data-deadline") + "T23:59:59");
+    if (today <= on) return;
+
+    // A chip inside the roles list just changes what it says.
+    if (el.tagName === "SPAN") {
+      el.textContent = "Closed";
+      el.closest(".row")?.classList.add("is-closed");
+      return;
+    }
+    // A paragraph hands over to the one written for after the date.
+    el.style.display = "none";
+    document.querySelectorAll("[data-deadline-passed]").forEach((p) => {
+      p.style.display = "";
+    });
+  });
+})();

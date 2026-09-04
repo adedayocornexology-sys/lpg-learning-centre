@@ -258,3 +258,7 @@ a.ghost{display:inline-flex;align-items:center;justify-content:center}
 @media(max-width:900px){
   .bar .trail{display:none}
 }
+
+/* A role past its closing date reads as history, not as an invitation. */
+.row.is-closed{opacity:.72}
+.row.is-closed .end{background:var(--line);color:var(--ink-soft)}
