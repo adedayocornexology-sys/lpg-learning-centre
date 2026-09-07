@@ -9,6 +9,7 @@ every view gets a real URL a parent can be sent or can find on Google.
 Run:  python build.py
 """
 import io, os, json, re, datetime
+import login_template
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 
@@ -860,6 +861,12 @@ if __name__ == "__main__":
                             wa=WA, email=EMAIL)
         io.open(os.path.join(OUT, fname), "w", encoding="utf-8").write(html)
         print("%-22s %6d bytes" % (fname, len(html)))
+
+    # The dashboard door. Its own shell, noindex, and deliberately kept out
+    # of the sitemap: a sign-in page has no business in search results.
+    login = login_template.render(SITE + "/login", PHONE)
+    io.open(os.path.join(OUT, "login.html"), "w", encoding="utf-8").write(login)
+    print("%-22s %6d bytes" % ("login.html", len(login)))
 
     # Home first, then the pages a parent deciding on a school actually needs.
     PRIORITY = {"index.html": "1.0", "programmes.html": "0.9", "find-us.html": "0.9",
