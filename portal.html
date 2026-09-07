@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>LPG Portal &mdash; prototype</title>
-<meta name="description" content="Prototype of the LPG Learning Centre portal: a teacher writes a note, the child's parent reads it.">
+<meta name="description" content="Prototype of the LPG Learning Centre portal.">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#FFFBF2">
 <link rel="icon" href="assets/img/lpg-mark.svg">
@@ -14,74 +14,58 @@
 
 <div class="demo">
   <b>Prototype.</b> The children and parents here are invented, not LPG pupils.
-  Anything you type stays on this device only.
+  The assistant follows a script, no model is connected yet.
 </div>
 
-<div class="bar" id="bar" hidden>
-  <div class="in">
-    <a class="mark" href="/">
+<div class="app">
+
+  <aside class="side" id="side">
+    <div class="head">
       <img src="assets/img/lpg-mark.svg" alt="">
-      <span><i class="l">Learn</i> <i class="p">Play</i> <i class="g">Grow</i></span>
-    </a>
-    <div class="who"><b id="whoName"></b><span id="whoRole"></span></div>
-    <button class="out" id="signOut" type="button">Sign out</button>
+      <span class="t">LPG Portal<span id="sideRole">Nursery 2</span></span>
+    </div>
+
+    <button class="newchat" type="button" id="newChat">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      New conversation
+    </button>
+
+    <nav class="nav" id="nav"></nav>
+
+    <div class="whoami">
+      <span class="av" id="meAv"></span>
+      <span class="tx"><b id="meName"></b><span id="meRole"></span></span>
+      <button class="sw" type="button" id="switch">Switch</button>
+    </div>
+  </aside>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <div class="main">
+    <div class="bar">
+      <button class="burger" type="button" id="burger" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <span class="crumb" id="crumb">Ask LPG</span>
+      <span class="right">Michaelmas term</span>
+    </div>
+
+    <div class="scrollarea" id="scrollarea">
+      <div class="pane" id="pane"></div>
+    </div>
+
+    <div class="composer" id="composer">
+      <div class="in">
+        <textarea id="input" rows="1" placeholder="Ask about your class, or tell me what to do"></textarea>
+        <button class="send" type="button" id="send" disabled aria-label="Send">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <p class="fine">The assistant can do anything in the sidebar for you.</p>
+    </div>
   </div>
+
 </div>
-
-<main>
-  <!-- sign in -->
-  <section id="vSignin" class="signin">
-    <h1>The LPG portal</h1>
-    <p class="sub">Choose who you want to be, to see what that person sees.</p>
-    <div class="pick">
-      <button class="role" type="button" data-as="teacher">
-        <span class="av t">GI</span>
-        <span class="tx"><b>Mrs Grace Ilesanmi</b><span>Teacher &middot; Nursery 2</span></span>
-      </button>
-      <button class="role" type="button" data-as="parent">
-        <span class="av p">FO</span>
-        <span class="tx"><b>Mrs Folake Okafor</b><span>Parent of Adaeze</span></span>
-      </button>
-    </div>
-    <p class="note-min">There is no password here on purpose. In the real portal a
-      parent gets a sign-in link by email, so nobody has to remember anything, and there
-      is no password for the school to reset.</p>
-  </section>
-
-  <!-- teacher: class list -->
-  <section id="vClass" hidden>
-    <h1>Nursery 2</h1>
-    <p class="sub">Five children in your class. Tap a child to write a note.</p>
-    <div class="kids" id="kidList"></div>
-  </section>
-
-  <!-- teacher: one child -->
-  <section id="vChild" hidden>
-    <button class="back" id="backClass" type="button">&larr; Nursery 2</button>
-    <h1 id="childName"></h1>
-    <p class="sub">Write what you noticed today.</p>
-    <div class="card" style="margin-top:16px">
-      <label for="body">Your note</label>
-      <textarea id="body" placeholder="Adaeze counted to twenty on her own today, without help."></textarea>
-      <label class="share" for="shareIt">
-        <input type="checkbox" id="shareIt">
-        <span class="tx"><b>Share this with the parent</b>
-          <span>Leave it unticked to keep it as a draft only you can see.</span></span>
-      </label>
-      <button class="cta" id="saveNote" type="button" disabled>Save note</button>
-    </div>
-    <div class="h2">Notes on this child</div>
-    <div id="childNotes"></div>
-  </section>
-
-  <!-- parent -->
-  <section id="vParent" hidden>
-    <h1>Adaeze</h1>
-    <p class="sub">Nursery 2 &middot; Mrs Grace Ilesanmi</p>
-    <div class="h2">What her teacher has shared</div>
-    <div id="parentNotes"></div>
-  </section>
-</main>
 
 <script src="assets/portal.js"></script>
 </body>
