@@ -864,7 +864,8 @@ if __name__ == "__main__":
 
     # The dashboard door. Its own shell, noindex, and deliberately kept out
     # of the sitemap: a sign-in page has no business in search results.
-    login = login_template.render(SITE + "/login", PHONE)
+    login = login_template.render(SITE + "/login", PHONE,
+                                 datetime.datetime.now().strftime("%Y%m%d%H%M"))
     io.open(os.path.join(OUT, "login.html"), "w", encoding="utf-8").write(login)
     print("%-22s %6d bytes" % ("login.html", len(login)))
 

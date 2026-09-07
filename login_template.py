@@ -31,7 +31,7 @@ LOGIN = u"""<!doctype html>
 <link rel="canonical" href="__CANONICAL__">
 <meta name="theme-color" content="#FFFBF2">
 <link rel="icon" href="assets/img/lpg-mark.svg">
-<link rel="stylesheet" href="assets/login.css">
+<link rel="stylesheet" href="assets/login.css?v=__ASSETV__">
 </head>
 <body>
 
@@ -149,11 +149,14 @@ LOGIN = u"""<!doctype html>
   <a href="/">Back to the website</a>
 </footer>
 
-<script src="assets/login.js"></script>
+<script src="assets/login.js?v=__ASSETV__"></script>
 </body>
 </html>
 """
 
 
-def render(canonical, phone):
-    return LOGIN.replace("__CANONICAL__", canonical).replace("__PHONE__", phone)
+def render(canonical, phone, assetv=""):
+    """assetv busts the one-hour cache on /assets so a deploy is seen at once."""
+    return (LOGIN.replace("__CANONICAL__", canonical)
+                 .replace("__PHONE__", phone)
+                 .replace("__ASSETV__", assetv))
