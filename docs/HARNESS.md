@@ -181,8 +181,11 @@ that Platform is *"only built when it serves a paying job"* and must never displ
 
 So, plainly:
 
-- **LPG has no agreement, no scope and no money agreed.** Until it does, this is a
-  design, not a project.
+- **Corrected 7 Sept 2026, later the same day:** the work IS commissioned. Aunty
+  Funke phoned him, walked him through their existing dashboard, handed over login
+  access and showed him what she wants worked on. He has started. What still does
+  not exist is anything **in writing** and any **money**, so the immediate job is a
+  written scope confirmation and a commencement deposit, not a pitch.
 - The founder needs **₦248,000 a month** he does not currently earn. A school harness is
   the more interesting thing to think about and the enquiry capture in phase 2 is the
   thing that gets paid for.
