@@ -197,12 +197,18 @@ SHELL = """<!doctype html>
     <h2 style="font-size:24px">Come and see us.</h2>
     <p class="sub" style="margin-bottom:20px;font-size:14.5px">Tell us when suits and we will
       have someone show you round. No commitment &mdash; most parents visit twice before deciding.</p>
-    <div class="f"><label>Your name</label><input placeholder="e.g. Mrs Adebayo"></div>
-    <div class="f"><label>Phone or WhatsApp</label><input inputmode="tel" placeholder="0808 892 4790"></div>
-    <div class="f"><label>Which stage?</label>
-      <select><option>Cr&egrave;che</option><option>Preschool</option><option>Nursery</option><option>Primary</option><option>Not sure yet</option></select></div>
-    <button class="cta">Send request {arrow}</button>
-    <p class="fine">We reply on WhatsApp, usually the same day.</p>
+    <form id="visitForm" data-wa="{wa}" data-email="{email}" novalidate>
+    <div class="f"><label for="vName">Your name</label>
+      <input id="vName" name="name" required placeholder="e.g. Mrs Adebayo"></div>
+    <div class="f"><label for="vPhone">Phone or WhatsApp</label>
+      <input id="vPhone" name="phone" inputmode="tel" required placeholder="e.g. 0803 000 0000"></div>
+    <div class="f"><label for="vWhen">When suits you?</label>
+      <input id="vWhen" name="when" placeholder="e.g. Tuesday morning"></div>
+    <div class="f"><label for="vStage">Which stage?</label>
+      <select id="vStage" name="stage"><option>Cr&egrave;che</option><option>Preschool</option><option>Nursery</option><option>Primary</option><option>Not sure yet</option></select></div>
+    <button class="cta" type="submit">Send request {arrow}</button>
+    <p class="fine" id="visitNote">We reply on WhatsApp, usually the same day.</p>
+    </form>
   </div>
 </aside>
 <div class="scrim" id="scrim"></div>
@@ -739,6 +745,8 @@ PAGES['careers.html'] = dict(id='careers',
 SITE  = "https://lpg-learning-centre.vercel.app"
 PHONE = "+2348088924790"
 EMAIL = "admin@welearnplaygrow.com"
+# wa.me wants digits only, no plus, no spaces.
+WA    = PHONE.lstrip("+")
 
 # The school described once. Every page references it by @id rather than
 # repeating it, which is what lets a search engine read eleven pages as one
@@ -848,7 +856,8 @@ if __name__ == "__main__":
         canonical = SITE + "/" + path_of(fname)
         html = SHELL.format(title=p["title"], desc=p["desc"], id=p["id"],
                             body=p["body"], arrow=ARROW, panel=PANEL,
-                            canonical=canonical, site=SITE, schema=schema)
+                            canonical=canonical, site=SITE, schema=schema,
+                            wa=WA, email=EMAIL)
         io.open(os.path.join(OUT, fname), "w", encoding="utf-8").write(html)
         print("%-22s %6d bytes" % (fname, len(html)))
 

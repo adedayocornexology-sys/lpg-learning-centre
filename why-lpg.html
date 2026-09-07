@@ -85,12 +85,18 @@
     <h2 style="font-size:24px">Come and see us.</h2>
     <p class="sub" style="margin-bottom:20px;font-size:14.5px">Tell us when suits and we will
       have someone show you round. No commitment &mdash; most parents visit twice before deciding.</p>
-    <div class="f"><label>Your name</label><input placeholder="e.g. Mrs Adebayo"></div>
-    <div class="f"><label>Phone or WhatsApp</label><input inputmode="tel" placeholder="0808 892 4790"></div>
-    <div class="f"><label>Which stage?</label>
-      <select><option>Cr&egrave;che</option><option>Preschool</option><option>Nursery</option><option>Primary</option><option>Not sure yet</option></select></div>
-    <button class="cta">Send request <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
-    <p class="fine">We reply on WhatsApp, usually the same day.</p>
+    <form id="visitForm" data-wa="2348088924790" data-email="admin@welearnplaygrow.com" novalidate>
+    <div class="f"><label for="vName">Your name</label>
+      <input id="vName" name="name" required placeholder="e.g. Mrs Adebayo"></div>
+    <div class="f"><label for="vPhone">Phone or WhatsApp</label>
+      <input id="vPhone" name="phone" inputmode="tel" required placeholder="e.g. 0803 000 0000"></div>
+    <div class="f"><label for="vWhen">When suits you?</label>
+      <input id="vWhen" name="when" placeholder="e.g. Tuesday morning"></div>
+    <div class="f"><label for="vStage">Which stage?</label>
+      <select id="vStage" name="stage"><option>Cr&egrave;che</option><option>Preschool</option><option>Nursery</option><option>Primary</option><option>Not sure yet</option></select></div>
+    <button class="cta" type="submit">Send request <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+    <p class="fine" id="visitNote">We reply on WhatsApp, usually the same day.</p>
+    </form>
   </div>
 </aside>
 <div class="scrim" id="scrim"></div>

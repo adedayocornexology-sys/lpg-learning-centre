@@ -258,3 +258,59 @@ if (cv) {
     });
   });
 })();
+
+/* ---------- the visit request actually goes somewhere ----------
+   The sheet used to collect a name, a phone number and a stage, and then throw
+   them away: no form, no handler, no feedback. A parent could not tell the
+   difference between "sent" and "broken".
+
+   There is no server here, so the enquiry travels the way the sheet already
+   promises it will. It opens WhatsApp on the school's own number with the
+   details written out, and the parent taps send. That lands in an inbox the
+   school reads, and it leaves them holding the thread rather than waiting on
+   a form that nobody monitors. Email is the fallback for anyone without it. */
+(function visitRequest() {
+  const form = document.getElementById('visitForm');
+  if (!form) return;
+  const note = document.getElementById('visitNote');
+  const NOTE = note ? note.textContent : '';
+
+  function say(msg, bad) {
+    if (!note) return;
+    note.textContent = msg;
+    note.style.color = bad ? '#b3261e' : '';
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const val = k => (form.elements[k] ? form.elements[k].value.trim() : '');
+    const name = val('name'), phone = val('phone');
+
+    // Ask for the two things the school cannot call anyone back without.
+    if (!name)  { say('Please add your name so we know who to expect.', true); form.elements.name.focus();  return; }
+    if (!phone) { say('Please add a phone number so we can confirm.',   true); form.elements.phone.focus(); return; }
+
+    const lines = [
+      'Hello LPG, I would like to book a visit.',
+      '',
+      'Name: ' + name,
+      'Phone: ' + phone,
+      'Stage: ' + val('stage')
+    ];
+    if (val('when')) lines.push('When suits: ' + val('when'));
+    lines.push('', 'Sent from the website.');
+    const text = encodeURIComponent(lines.join('\n'));
+
+    const wa = form.getAttribute('data-wa');
+    const email = form.getAttribute('data-email');
+    const url = wa
+      ? 'https://wa.me/' + wa + '?text=' + text
+      : 'mailto:' + email + '?subject=' + encodeURIComponent('Visit request from ' + name) + '&body=' + text;
+
+    // A new tab, so the parent still has the site behind them if they change
+    // their mind or WhatsApp is not installed.
+    window.open(url, '_blank', 'noopener');
+    say('Opening WhatsApp so you can send it. Tap send there and we will reply.');
+    setTimeout(() => say(NOTE), 6000);
+  });
+})();
