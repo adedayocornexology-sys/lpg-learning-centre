@@ -1,0 +1,131 @@
+/* The sign-in page.
+
+   Pattern borrowed from the school's current site, which gets one thing right:
+   the login page looks like part of the website rather than a bare app screen.
+   Site header, a coloured band carrying the page title and a breadcrumb, then
+   two columns with the school's contact details on the left and the form on the
+   right, then a footer.
+
+   What is deliberately not copied: the broken phone number, the "Call Us 7/24"
+   and "Make a Quote" labels that were never written for a school login, the
+   540x227 placeholder where a video should be, and the password field. */
+
+@font-face{font-family:'Baloo 2';src:url('../fonts/baloo-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Baloo 2';src:url('../fonts/baloo-800.woff2') format('woff2');font-weight:800;font-display:swap}
+@font-face{font-family:'Outfit';src:url('../fonts/outfit-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Outfit';src:url('../fonts/outfit-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Outfit';src:url('../fonts/outfit-600.woff2') format('woff2');font-weight:600;font-display:swap}
+
+:root{
+  --learn:#1B9E6E; --play:#F2742D; --play-dark:#D9601C; --grow:#F5C81F;
+  --ink:#1E1B16; --ink-soft:#5B5346; --cream:#FFFBF2; --sand:#FFF4D6;
+  --line:#EFE3C6; --white:#fff; --red:#B3402C; --field:#F7F4EC;
+  --display:'Baloo 2','Trebuchet MS',system-ui,sans-serif;
+  --body:'Outfit','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{max-width:100%;overflow-x:hidden}
+body{background:var(--cream);color:var(--ink);font-family:var(--body);
+  line-height:1.55;-webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+
+/* ---------- header ---------- */
+.top{background:var(--cream);border-bottom:1px solid var(--line)}
+.top .in{max-width:1160px;margin-inline:auto;padding:14px 20px;
+  display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:auto}
+.logo img{height:38px;width:auto;display:block}
+.logo .wm{font-family:var(--display);font-weight:800;font-size:17px;
+  letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
+.logo i{font-style:normal}
+.logo .l{color:var(--learn)} .logo .p{color:var(--play)} .logo .g{color:var(--grow)}
+.back{font-size:14.5px;font-weight:500;color:var(--ink-soft);text-decoration:none;
+  white-space:nowrap}
+.back:hover{color:var(--ink)}
+.visit{background:var(--play);color:#fff;border-radius:99px;padding:11px 20px;
+  font-weight:600;font-size:14.5px;text-decoration:none;white-space:nowrap;
+  box-shadow:0 8px 20px -8px rgba(242,116,45,.7);transition:.16s}
+.visit:hover{background:var(--play-dark)}
+@media(max-width:640px){ .back{display:none} .logo .wm{font-size:15px} }
+
+/* ---------- the band ---------- */
+.band{background:var(--play);color:#fff;position:relative;
+  padding:52px 20px 66px;text-align:center}
+.band h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,6vw,44px);
+  line-height:1.15;letter-spacing:-.015em}
+.crumb{margin-top:8px;font-size:14.5px;color:rgba(255,255,255,.9)}
+.crumb a{color:#fff;text-decoration:none;font-weight:500}
+.crumb a:hover{text-decoration:underline}
+.crumb span{opacity:.75;margin:0 7px}
+/* the scalloped edge, drawn rather than shipped as an image */
+.band::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:26px;
+  background:radial-gradient(circle at 50% 0, transparent 13px, var(--cream) 13.5px);
+  background-size:44px 26px;background-repeat:repeat-x}
+
+/* ---------- body ---------- */
+main{flex:1;max-width:1160px;width:100%;margin-inline:auto;padding:44px 20px 60px}
+.cols{display:grid;gap:26px;align-items:start}
+@media(min-width:900px){ .cols{grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:44px} }
+
+/* left: the school, reachable */
+.reach{background:var(--play);color:#fff;border-radius:22px;padding:8px 24px}
+.reach .row{display:flex;align-items:center;gap:16px;padding:20px 0;
+  border-bottom:1px solid rgba(255,255,255,.28)}
+.reach .row:last-child{border-bottom:0}
+.reach .ic{width:52px;height:52px;flex:none;border-radius:50%;
+  border:1.5px dashed rgba(255,255,255,.65);display:grid;place-items:center}
+.reach .ic svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+.reach .tx{min-width:0}
+.reach .tx span{display:block;font-size:12.5px;letter-spacing:.03em;
+  color:rgba(255,255,255,.85)}
+.reach .tx b{display:block;font-family:var(--display);font-weight:700;
+  font-size:19px;line-height:1.25;margin-top:2px;word-break:break-word}
+.reach .tx a{color:#fff;text-decoration:none}
+.reach .tx a:hover{text-decoration:underline}
+
+/* right: the form */
+.panel{background:var(--white);border:1px solid var(--line);border-radius:22px;
+  padding:34px 30px}
+@media(max-width:520px){ .panel{padding:26px 20px} }
+.panel h2{font-family:var(--display);font-weight:700;font-size:27px;
+  letter-spacing:-.015em}
+.panel .lede{margin-top:6px;font-size:15px;color:var(--ink-soft)}
+.btn{width:100%;border-radius:99px;padding:14px 20px;font-family:var(--body);
+  font-weight:600;font-size:15.5px;cursor:pointer;border:1px solid transparent;
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .16s,box-shadow .16s,background .16s}
+.btn:active{transform:translateY(1px)}
+.btn.google{margin-top:22px;background:var(--white);border-color:var(--line);color:var(--ink)}
+.btn.google:hover{background:var(--sand)}
+.btn.google svg{width:18px;height:18px;flex:none}
+.btn.go{background:var(--play);color:#fff;box-shadow:0 8px 20px -8px rgba(242,116,45,.75)}
+.btn.go:hover{background:var(--play-dark)}
+.or{margin:20px 0;display:flex;align-items:center;gap:14px;color:var(--ink-soft);
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+form{display:flex;flex-direction:column;gap:14px}
+label{display:block;font-size:13.5px;font-weight:600;color:var(--ink-soft);
+  margin-bottom:7px}
+input[type=email]{width:100%;background:var(--field);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;font-family:var(--body);font-size:15.5px;
+  color:var(--ink);transition:border-color .16s,box-shadow .16s}
+input[type=email]::placeholder{color:#A99E8B}
+input[type=email]:focus{outline:none;border-color:var(--play);background:var(--white);
+  box-shadow:0 0 0 3px rgba(242,116,45,.16)}
+.note{font-size:13.5px;line-height:1.55;color:var(--ink-soft);text-align:center}
+.note.bad{color:var(--red)} .note.ok{color:var(--learn)}
+.who{margin-top:22px;background:var(--sand);border-radius:16px;padding:16px 18px;
+  font-size:13.5px;line-height:1.6;color:var(--ink-soft)}
+.who b{color:var(--ink);font-weight:600}
+.trouble{margin-top:18px;font-size:13.5px;color:var(--ink-soft);text-align:center}
+.trouble a{color:var(--play);font-weight:600;text-decoration:none}
+.trouble a:hover{text-decoration:underline}
+
+/* ---------- footer ---------- */
+footer{background:var(--sand);padding:24px 20px;text-align:center;
+  font-size:13px;color:var(--ink-soft)}
+footer a{color:var(--ink-soft)}
+
+:focus-visible{outline:2px solid var(--play);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}

@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
-"""The dashboard door.
+"""The sign-in page.
 
-Deliberately NOT built on build.py's SHELL. A sign-in page that carries a
-marketing nav is a sign-in page that invites you to wander off; the whole job
-of this screen is one decision.
+Structure follows the pattern on the school's current site, because that pattern
+gets one thing right: the login page reads as part of the website rather than a
+bare application screen. Site header, a coloured band carrying the page title and
+a breadcrumb, two columns with the school's contact details beside the form, then
+a footer.
 
-Structure is borrowed from Claude's own sign-in — one centred column on a warm
-ground, the mark, a single primary action — and dressed in Learn / Play / Grow.
+What is deliberately not copied from theirs: the broken phone number
+(+2340-808-892-4790), the "Call Us 7/24" and "Make a Quote" labels that were never
+written for a school login, the 540x227 grey box where a video should be, and the
+password field.
 
-Substitution is plain token replacement rather than str.format, so the CSS and
-JS below can use braces normally and stay readable.
+CSS and JS live in assets/, never inline. The site sends
+`style-src 'self'; script-src 'self'`, so a browser silently discards inline
+blocks and the page arrives unstyled and dead.
+
+Substitution is plain token replacement, so the markup below can use braces.
 """
 
 TOKENS = ("__CANONICAL__", "__PHONE__")
@@ -20,185 +27,91 @@ LOGIN = u"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Sign in &mdash; LPG Learning Centre</title>
-<meta name="description" content="Sign in to the LPG Learning Centre dashboard.">
+<meta name="description" content="Sign in to the LPG Learning Centre portal.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="canonical" href="__CANONICAL__">
-<meta name="theme-color" content="#FFFBF2">
+<meta name="theme-color" content="#F2742D">
 <link rel="icon" href="assets/img/lpg-mark.svg">
-<style>
-@font-face{font-family:'Baloo 2';src:url('fonts/baloo-700.woff2') format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Baloo 2';src:url('fonts/baloo-800.woff2') format('woff2');font-weight:800;font-display:swap}
-@font-face{font-family:'Outfit';src:url('fonts/outfit-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'Outfit';src:url('fonts/outfit-500.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'Outfit';src:url('fonts/outfit-600.woff2') format('woff2');font-weight:600;font-display:swap}
-
-:root{
-  --learn:#1B9E6E; --play:#F2742D; --grow:#F5C81F;
-  --ink:#1E1B16; --ink-soft:#5B5346; --cream:#FFFBF2; --sand:#FFF4D6;
-  --line:#EFE3C6; --white:#fff; --red:#B3402C;
-  --display:'Baloo 2','Trebuchet MS',system-ui,sans-serif;
-  --body:'Outfit','Segoe UI',system-ui,sans-serif;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{min-height:100%}
-body{background:var(--cream);color:var(--ink);font-family:var(--body);
-  -webkit-font-smoothing:antialiased;min-height:100dvh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:34px 22px}
-
-/* the three words, as three colours, greeting you at the door */
-.mark{display:flex;align-items:center;gap:9px;text-decoration:none}
-.mark img{width:46px;height:46px;border-radius:13px;display:block}
-.mark span{font-family:var(--display);font-weight:800;font-size:19px;
-  letter-spacing:-.01em;color:var(--ink)}
-.mark i{font-style:normal}
-.mark .l{color:var(--learn)} .mark .p{color:var(--play)} .mark .g{color:var(--grow)}
-
-main{width:100%;max-width:388px;display:flex;flex-direction:column;
-  gap:22px;margin-top:34px}
-
-h1{font-family:var(--display);font-weight:700;font-size:29px;line-height:1.2;
-  letter-spacing:-.015em;text-align:center;text-wrap:balance}
-.sub{margin-top:9px;text-align:center;font-size:15px;line-height:1.55;
-  color:var(--ink-soft);text-wrap:balance}
-
-.btn{width:100%;border-radius:99px;padding:14px 20px;font-family:var(--body);
-  font-weight:600;font-size:15.5px;cursor:pointer;border:1px solid transparent;
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  transition:transform .16s,box-shadow .16s,background .16s}
-.btn:active{transform:translateY(1px)}
-.btn.google{background:var(--white);border-color:var(--line);color:var(--ink)}
-.btn.google:hover{background:var(--sand)}
-.btn.google svg{width:18px;height:18px;flex:none}
-.btn.go{background:var(--play);color:#fff;
-  box-shadow:0 8px 20px -8px rgba(242,116,45,.75)}
-.btn.go:hover{box-shadow:0 12px 26px -10px rgba(242,116,45,.85)}
-
-.or{display:flex;align-items:center;gap:14px;color:var(--ink-soft);
-  font-size:12px;letter-spacing:.14em;text-transform:uppercase}
-.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
-
-form{display:flex;flex-direction:column;gap:12px}
-label{font-size:13px;font-weight:500;color:var(--ink-soft);
-  display:block;margin-bottom:6px}
-input[type=email]{width:100%;background:var(--white);border:1px solid var(--line);
-  border-radius:14px;padding:13px 15px;font-family:var(--body);font-size:15.5px;
-  color:var(--ink);transition:border-color .16s,box-shadow .16s}
-input[type=email]::placeholder{color:#A99E8B}
-input[type=email]:focus{outline:none;border-color:var(--play);
-  box-shadow:0 0 0 3px rgba(242,116,45,.16)}
-
-.note{font-size:13.5px;line-height:1.55;color:var(--ink-soft);text-align:center}
-/* reserve the line only once there is something to say, so the button does not
-   float above a permanent empty band */
-.note:not(:empty){margin-top:2px}
-.note.bad{color:var(--red)}
-.note.ok{color:var(--learn)}
-
-.who{background:var(--sand);border-radius:16px;padding:15px 17px;
-  font-size:13.5px;line-height:1.6;color:var(--ink-soft)}
-.who b{color:var(--ink);font-weight:600}
-
-footer{margin-top:30px;max-width:388px;text-align:center;
-  font-size:12.5px;line-height:1.6;color:var(--ink-soft)}
-footer a{color:var(--ink-soft)}
-.back{margin-top:14px;display:inline-block;font-size:13.5px;
-  color:var(--ink-soft);text-decoration:none}
-.back:hover{color:var(--ink);text-decoration:underline}
-
-:focus-visible{outline:2px solid var(--play);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:400px){h1{font-size:25px}}
-</style>
+<link rel="stylesheet" href="assets/login.css">
 </head>
 <body>
 
-<a class="mark" href="/">
-  <img src="assets/img/lpg-mark.svg" alt="">
-  <span><i class="l">Learn</i> <i class="p">Play</i> <i class="g">Grow</i></span>
-</a>
+<header class="top">
+  <div class="in">
+    <a class="logo" href="/">
+      <img src="assets/img/lpg-mark.svg" alt="">
+      <span class="wm"><i class="l">Learn</i> <i class="p">Play</i> <i class="g">Grow</i></span>
+    </a>
+    <a class="back" href="/">Back to the website</a>
+    <a class="visit" href="/find-us">Book a visit</a>
+  </div>
+</header>
+
+<div class="band">
+  <h1>Sign in</h1>
+  <p class="crumb"><a href="/">Home</a><span>&rsaquo;</span>Sign in</p>
+</div>
 
 <main>
-  <div>
-    <h1>Sign in to LPG</h1>
-    <p class="sub">For staff and parents of LPG Learning Centre.</p>
-  </div>
+  <div class="cols">
 
-  <button class="btn google" type="button" id="google">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.4a5.5 5.5 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.6-5.2 3.6-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3a7.2 7.2 0 0 1-10.7-3.8h-4v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.1 7.1 0 0 1 0-4.6v-3h-4a12 12 0 0 0 0 10.7l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.4.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.7l4 3.1A7.2 7.2 0 0 1 12 4.8z"/></svg>
-    Continue with Google
-  </button>
+    <aside class="reach">
+      <div class="row">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.8 2.1z"/></svg></span>
+        <span class="tx"><span>Call the school</span>
+          <b><a href="tel:__PHONE__">0808 892 4790</a></b></span>
+      </div>
+      <div class="row">
+        <span class="ic"><svg viewBox="0 0 24 24"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 6.5 9 6.5 9-6.5"/></svg></span>
+        <span class="tx"><span>Email the school</span>
+          <b><a href="mailto:admin@welearnplaygrow.com">admin@welearnplaygrow.com</a></b></span>
+      </div>
+      <div class="row">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M20 10.5c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10.5" r="2.8"/></svg></span>
+        <span class="tx"><span>Come and see us</span>
+          <b>112 Road, Festac Town, Lagos</b></span>
+      </div>
+    </aside>
 
-  <div class="or">or</div>
+    <section class="panel">
+      <h2>Welcome back</h2>
+      <p class="lede">For the staff and parents of LPG Learning Centre.</p>
 
-  <form id="signin" novalidate>
-    <div>
-      <label for="email">Email address</label>
-      <input id="email" name="email" type="email" autocomplete="email"
-             placeholder="you@example.com" required>
-    </div>
-    <button class="btn go" type="submit">Email me a sign-in link</button>
-    <p class="note" id="note" role="status" aria-live="polite"></p>
-  </form>
+      <button class="btn google" type="button" id="google">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.4a5.5 5.5 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.6-5.2 3.6-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3a7.2 7.2 0 0 1-10.7-3.8h-4v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.1 7.1 0 0 1 0-4.6v-3h-4a12 12 0 0 0 0 10.7l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.4.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.7l4 3.1A7.2 7.2 0 0 1 12 4.8z"/></svg>
+        Continue with Google
+      </button>
 
-  <div class="who">
-    <b>Parents sign in here too.</b> Children do not get their own accounts
-    &mdash; a child is reached through their parent, which is how it should be
-    at this age.
+      <div class="or">or</div>
+
+      <form id="signin" novalidate>
+        <div>
+          <label for="email">Your email</label>
+          <input id="email" name="email" type="email" autocomplete="email"
+                 placeholder="you@example.com" required>
+        </div>
+        <button class="btn go" type="submit">Email me a sign-in link</button>
+        <p class="note" id="note" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="who">
+        <b>Parents sign in here too.</b> Children do not get accounts of their own.
+        A child is reached through their parent, which is how it should be at this age.
+      </div>
+
+      <p class="trouble">Trouble signing in? Call the school on
+        <a href="tel:__PHONE__">0808 892 4790</a>.</p>
+    </section>
+
   </div>
 </main>
 
 <footer>
-  <p>Trouble signing in? Call the school on
-    <a href="tel:__PHONE__">0808 892 4790</a>.</p>
-  <a class="back" href="/">&larr; Back to the website</a>
+  &copy; LPG Learning Centre, Festac Town, Lagos &middot;
+  <a href="/">Back to the website</a>
 </footer>
 
-<script>
-/* There is no password field on this page, and that is a decision rather than
-   an omission. A school this size cannot staff a password reset desk, and the
-   person who becomes that desk by default is whoever built the site. A link
-   sent to an address the school already holds removes the whole category — and
-   a parent locked out at 6am is a parent who stops checking on their child.
-
-   Nothing authenticates yet; the dashboard is phase 3. The page says so plainly
-   instead of spinning a fake loader. A door that pretends to open is worse than
-   one that admits it is not fitted. */
-(function () {
-  var LIVE = false;                       // flip when the backend lands
-  var form = document.getElementById('signin');
-  var mail = document.getElementById('email');
-  var note = document.getElementById('note');
-  var goog = document.getElementById('google');
-
-  function say(msg, kind) {
-    note.textContent = msg;
-    note.className = 'note' + (kind ? ' ' + kind : '');
-  }
-
-  function notYet() {
-    say('The dashboard is still being built. The school will send sign-in '
-      + 'details when it opens.');
-  }
-
-  goog.addEventListener('click', notYet);
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var v = mail.value.trim();
-    if (!v) {
-      say('Enter the email address the school has for you.', 'bad');
-      mail.focus(); return;
-    }
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@][^\\s@]+$/.test(v)) {
-      say('That does not look like an email address.', 'bad');
-      mail.focus(); return;
-    }
-    if (!LIVE) { notYet(); return; }
-    say('Check your email for the sign-in link.', 'ok');
-  });
-})();
-</script>
+<script src="assets/login.js"></script>
 </body>
 </html>
 """
