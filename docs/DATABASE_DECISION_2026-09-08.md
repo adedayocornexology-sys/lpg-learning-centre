@@ -8,7 +8,16 @@ re-checked before it is quoted to a client.
 ## The decision
 
 **Supabase. Its own project, never shared with Ajasin or Sellam. Free tier. Region
-Frankfurt or Ireland.**
+West EU (Ireland), `eu-west-1`.**
+
+**Provisioned 8 September 2026.** Organization `LPG Learning Centre` (Educational, Free,
+ref `bbhhjstfzumzwidqffgn`), project `lpg-learning-centre`, region `eu-west-1`.
+
+Region was going to be Frankfurt until the region picker showed Supabase marks **West EU
+(Ireland) as recommended**. For Lagos the Atlantic-edge regions are at least as close as
+Frankfurt — West African subsea cables land on that side of Europe — and the GDPR position
+is identical. Region **cannot be changed after creation**, so we took their recommendation
+over our own guess.
 
 ## Why, in one line
 
