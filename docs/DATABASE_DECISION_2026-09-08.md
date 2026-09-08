@@ -75,8 +75,22 @@ None of these is free in engineering time the way bundled auth + RLS is.
    health-check route. This is the one real operational gap and it is cheap to close.
 2. **No African region.** Nearest is EU — Ireland or Frankfurt. Real latency from Lagos.
 3. **Free tier ceilings:** 500 MB database, 1 GB file storage, 5 GB egress, 50,000 monthly
-   active users, 2 active projects. The photographs will hit the 1 GB storage limit before
-   anything else does. First paid tier is $25/month.
+   active users. The photographs will hit the 1 GB storage limit before anything else does.
+   First paid tier is $25/month.
+4. ⭐ **The 2-free-project cap is per ACCOUNT, not per organization.** Corrected later the
+   same day, after first getting this wrong: Supabase counts 2 free projects across *every*
+   organization where you are Owner or Admin, and counts other Owners'/Admins' quotas too.
+   **Creating a new organization does not buy another free project.** So if Ajasin and
+   Sellam are both free projects on his account, LPG cannot be a third free one, and the
+   choice is: retire a dormant slot, or put the LPG organization on Pro at $25/month.
+   If Pro, it is a **client line item in the proposal**, not his own cost — and it also
+   removes the 7-day auto-pause problem in point 1.
+   Sourced from search results citing Supabase's billing docs; supabase.com would not
+   resolve from this machine at the time, so **confirm against the dashboard** before
+   quoting it to anyone.
+
+Still true, and unaffected: make the LPG **organization** separate anyway. The reasons that
+survive are clean handover to the school and blast radius, not the free allowance.
 
 ## NDPA note
 
