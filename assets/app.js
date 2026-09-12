@@ -270,6 +270,14 @@ if (cv) {
    school reads, and it leaves them holding the thread rather than waiting on
    a form that nobody monitors. Email is the fallback for anyone without it. */
 (function visitRequest() {
+  // Where an enquiry goes. This is the PUBLISHABLE key -- the same one that
+  // ships in the portal's own browser bundle. It is public by design and grants
+  // exactly one thing: permission to call submit_enquiry(). It cannot read the
+  // enquiry table, or anything else. Proven on 12 Sept 2026: as anon, reading
+  // that table raises permission denied, not an empty list.
+  const ENQUIRY_API = 'https://dulmsjrjlwtrgxzxkrox.supabase.co';
+  const ENQUIRY_KEY = 'sb_publishable_ovTJd9ZdTzha6Px0kz7lqA_qsMyp4mZ';
+
   const form = document.getElementById('visitForm');
   if (!form) return;
   const note = document.getElementById('visitNote');
@@ -300,6 +308,46 @@ if (cv) {
     if (val('when')) lines.push('When suits: ' + val('when'));
     lines.push('', 'Sent from the website.');
     const text = encodeURIComponent(lines.join('\n'));
+
+    // ---------------------------------------------------------------------
+    // Keep the enquiry. This is the whole reason this block exists.
+    //
+    // Until 12 Sept 2026 this form did one thing: open WhatsApp. If the parent
+    // did not tap send in WhatsApp, or the school did not happen to read the
+    // message, the enquiry simply never existed. ONTOLOGY.md called an enquiry
+    // "the single most commercially important object on the site and currently
+    // the one the site cannot store". This is that being fixed.
+    //
+    // ORDER MATTERS, AND IT IS DELIBERATE. The record is fired first but NOT
+    // awaited, and WhatsApp opens immediately afterwards. Awaiting a fetch
+    // before window.open loses the user-gesture context and popup blockers
+    // then eat the WhatsApp tab — so the parent would be punished for our
+    // bookkeeping. `keepalive` lets the request finish even as the page is
+    // navigating away.
+    //
+    // AND IT NEVER BLOCKS. If the database is down, unreachable, or the school
+    // has hit the rate limit, the parent still reaches WhatsApp exactly as
+    // before. Our record is the second priority; a parent getting through to a
+    // human is the first.
+    //
+    // No child's name is collected here, on purpose. The school learns an age
+    // band at most, and a child becomes a record only at offer or enrolment.
+    try {
+      if (ENQUIRY_API && ENQUIRY_KEY) {
+        fetch(ENQUIRY_API + '/rest/v1/rpc/submit_enquiry', {
+          method: 'POST',
+          keepalive: true,
+          headers: { 'apikey': ENQUIRY_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            p_contact_name: name,
+            p_contact_phone: phone,
+            p_stage_text: val('stage') || null,
+            p_message: val('when') ? ('Suggested visit: ' + val('when')) : null,
+            p_source: 'site'
+          })
+        }).catch(function () { /* the parent's message is already on its way */ });
+      }
+    } catch (err) { /* never let bookkeeping stop a parent reaching the school */ }
 
     const wa = form.getAttribute('data-wa');
     const email = form.getAttribute('data-email');
