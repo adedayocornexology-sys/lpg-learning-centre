@@ -248,10 +248,11 @@ PAGES['index.html'] = dict(id='home',
   body="""
       <div class="hero"><div class="wrap">
         <div>
+          <div class="eyebrow" style="margin-bottom:7px"><span>Welcome to LPG Learning Centre.</span></div>
           <div class="eyebrow"><span>Cr&egrave;che</span><span>Preschool</span><span>Nursery</span><span>Primary</span></div>
           <div class="spine"><i class="l">Learn</i>, <i class="p">Play</i> &amp; <i class="g">Grow</i>.</div>
           <h1><span class="swipe">The future ready school.</span></h1>
-          <p class="lede">Raising adaptable learners &mdash; grounded in technology, rich in creativity
+          <p class="lede">To raise adaptable learners &mdash; grounded in technology, rich in creativity
             and strong in character, ready to thrive in an ever-changing world.</p>
           <div class="actions">
             <button class="cta" data-sheet>Book a visit """ + ARROW + """</button>
