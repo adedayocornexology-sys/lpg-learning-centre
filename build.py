@@ -228,6 +228,16 @@ ADVANTAGE = bento(
   tile("half", None, "World-class comfort",
        "Secure, fully air-conditioned spaces where children safely learn, laugh and lead.", "r3"))
 
+PURPOSE = sect(
+  head("Our purpose", "Education goes beyond textbooks and classrooms.",
+       "To carve a distinctive niche recognised for fostering a dynamic and innovative environment that empowers students with a robust foundation in technology and a holistic approach to education.")
+  + '<p class="sub">At the heart of our mission is the belief that education goes beyond textbooks and classrooms. We are committed to providing a comprehensive education that not only equips students with technical prowess but also nurtures their creativity, communication skills and character.</p>'
+  + '<p class="sub">Our goal is to produce well rounded individuals who are not only competent in their chosen fields but also possess the resilience and adaptability needed to thrive in an ever-evolving world.</p>'
+  + '<p class="sub">We shall remain steadfast in our pursuit of excellence, combining technical proficiency with a holistic educational approach, to shape the future leaders and innovators of tomorrow</p>'
+  + grid(card("learn", "Our Mission", "To raise adaptable learners — grounded in technology, rich in creativity and strong in character — ready to thrive in an ever-changing world.", "r2"),
+         card("play", "Our Vision", "To be recognised as a distinctive, dynamic and innovative learning centre shaping confident future leaders and innovators of tomorrow.", "r3")),
+  band=True)
+
 PAGES = {}
 
 # ================================================================= HOME
@@ -241,9 +251,8 @@ PAGES['index.html'] = dict(id='home',
           <div class="eyebrow"><span>Cr&egrave;che</span><span>Preschool</span><span>Nursery</span><span>Primary</span></div>
           <div class="spine"><i class="l">Learn</i>, <i class="p">Play</i> &amp; <i class="g">Grow</i>.</div>
           <h1><span class="swipe">The future ready school.</span></h1>
-          <p class="lede">Raising intelligent and creative children in Festac &mdash; through hands-on
-            making, team activity and project-based learning, in classrooms built for how children
-            actually learn.</p>
+          <p class="lede">Raising adaptable learners &mdash; grounded in technology, rich in creativity
+            and strong in character, ready to thrive in an ever-changing world.</p>
           <div class="actions">
             <button class="cta" data-sheet>Book a visit """ + ARROW + """</button>
             <a class="ghost" href="programmes.html">See our programmes</a>
@@ -265,6 +274,7 @@ PAGES['index.html'] = dict(id='home',
           <b>Ideas-TVET</b>
         </div>
       </div></div>"""
+  + PURPOSE
   + sect(head("The LPG advantage", "Give them the best start.<br>Watch them lead the way.",
               "Three things every child here gets, in the school&rsquo;s own words.") + ADVANTAGE, band=True)
   + sect(split(
@@ -541,13 +551,14 @@ PAGES['find-us.html'] = dict(id='visit',
 
 # ================================================================= WHY LPG
 PAGES['why-lpg.html'] = dict(id='why',
-  title="Why LPG — raising intelligent and creative children | Festac",
+  title="Why LPG — raising adaptable learners | Festac",
   desc="Why parents choose LPG Learning Centre in Festac Town: nurturing curiosity, a "
        "tech-forward mindset and world-class comfort.",
   body=poster("Why LPG", "Raising intelligent and creative children.",
               "LPG calls itself the future ready school. In a normal week that means hands-on "
               "projects, technology used to teach rather than to impress, and a room small enough "
               "that a child cannot hide at the back of it.")
+  + PURPOSE
   + sect(ADVANTAGE, band=True)
   + sect(head("Beyond the classroom", "Well-rounded, not just well-taught.",
               "From sports and creativity to project-based lessons, LPG works on the parts of a "
@@ -673,7 +684,7 @@ PAGES['games.html'] = dict(id='games',
 # ================================================================= STORY
 PAGES['story.html'] = dict(id='story',
   title="Our Story — the future ready school | LPG Learning Centre, Festac",
-  desc="LPG Learning Centre is a preschool and primary school in Festac Town, Amuwo Odofin, Lagos.",
+  desc="LPG Learning Centre is a dynamic and innovative learning centre in Festac Town, Lagos, grounded in technology, creativity and character.",
   body=sect(split(
         '<div><div class="kick">Our story</div><h3>The future ready school.</h3>'
         '<p>LPG Learning Centre is a preschool and primary school in Festac Town, Amuwo Odofin, '
@@ -682,6 +693,7 @@ PAGES['story.html'] = dict(id='story',
         '<p>&ldquo;Raising intelligent and creative children&rdquo; is the school&rsquo;s own '
         'description of its job &mdash; and the test it holds itself to.</p></div>',
         ph("4:3", "The building", "The school from outside, in daylight, with the sign legible.", "r5")))
+  + PURPOSE
   + sect(head("More than a school", "Three things happen here.",
               "Most schools do the first one. LPG does all three, which is why the building is "
               "busy outside class hours.")
