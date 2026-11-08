@@ -551,13 +551,14 @@ PAGES['find-us.html'] = dict(id='visit',
 
 # ================================================================= WHY LPG
 PAGES['why-lpg.html'] = dict(id='why',
-  title="Why LPG — raising intelligent and creative children | Festac",
+  title="Why LPG — raising adaptable learners | Festac",
   desc="Why parents choose LPG Learning Centre in Festac Town: nurturing curiosity, a "
        "tech-forward mindset and world-class comfort.",
   body=poster("Why LPG", "Raising intelligent and creative children.",
               "LPG calls itself the future ready school. In a normal week that means hands-on "
               "projects, technology used to teach rather than to impress, and a room small enough "
               "that a child cannot hide at the back of it.")
+  + PURPOSE
   + sect(ADVANTAGE, band=True)
   + sect(head("Beyond the classroom", "Well-rounded, not just well-taught.",
               "From sports and creativity to project-based lessons, LPG works on the parts of a "
