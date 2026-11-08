@@ -342,3 +342,15 @@ h2{font-family:var(--display);font-weight:700;font-size:clamp(26px,4vw,38px);let
 .f input:focus,.f select:focus{outline:none;border-color:var(--play)}
 .sheet .cta{width:100%;justify-content:center;padding:15px}
 .fine{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:12px;line-height:1.5}
+
+
+/* Homepage purpose: prominent, readable and immediately after the hero. */
+.purpose-feature{background:var(--sand);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:clamp(38px,5.5vw,72px) 0}
+.purpose-feature .wrap{max-width:1040px}
+.purpose-feature .kick{font-size:12px}
+.purpose-feature h2{font-size:clamp(30px,4.5vw,46px);max-width:20ch;margin-bottom:18px}
+.purpose-feature .sub{font-size:clamp(16px,1.7vw,18px);line-height:1.72;max-width:none;margin-bottom:18px;color:#40392f}
+.purpose-feature .grid{margin-top:28px;gap:18px}
+.purpose-feature .card{padding:clamp(22px,3vw,32px);box-shadow:0 10px 28px -24px rgba(30,27,22,.5)}
+.purpose-feature .card h3{font-size:24px}
+.purpose-feature .card p{font-size:16px;line-height:1.65}
