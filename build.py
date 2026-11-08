@@ -251,9 +251,8 @@ PAGES['index.html'] = dict(id='home',
           <div class="eyebrow"><span>Cr&egrave;che</span><span>Preschool</span><span>Nursery</span><span>Primary</span></div>
           <div class="spine"><i class="l">Learn</i>, <i class="p">Play</i> &amp; <i class="g">Grow</i>.</div>
           <h1><span class="swipe">The future ready school.</span></h1>
-          <p class="lede">Raising intelligent and creative children in Festac &mdash; through hands-on
-            making, team activity and project-based learning, in classrooms built for how children
-            actually learn.</p>
+          <p class="lede">Raising adaptable learners &mdash; grounded in technology, rich in creativity
+            and strong in character, ready to thrive in an ever-changing world.</p>
           <div class="actions">
             <button class="cta" data-sheet>Book a visit """ + ARROW + """</button>
             <a class="ghost" href="programmes.html">See our programmes</a>
