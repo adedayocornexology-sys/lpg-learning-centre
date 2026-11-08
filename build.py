@@ -267,6 +267,9 @@ PAGES['index.html'] = dict(id='home',
         <div class="scene"><canvas id="play"></canvas></div>
       </div></div>
 
+"
+  + PURPOSE
+  + """
       <div class="trust"><div class="wrap">
         <div class="lbl">Early childhood development training delivered in partnership with</div>
         <div class="orgs">
@@ -274,8 +277,8 @@ PAGES['index.html'] = dict(id='home',
           <b>The World Bank</b><span class="sep"></span>
           <b>Ideas-TVET</b>
         </div>
+      </div></div>""
       </div></div>"""
-  + PURPOSE
   + sect(head("The LPG advantage", "Give them the best start.<br>Watch them lead the way.",
               "Three things every child here gets, in the school&rsquo;s own words.") + ADVANTAGE, band=True)
   + sect(split(
