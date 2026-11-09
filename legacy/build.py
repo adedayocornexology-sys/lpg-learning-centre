@@ -1,12 +1,22 @@
 # -*- coding: utf-8 -*-
 """
-LPG site build.
+LEGACY — NOT USED. Do not run this to update the site.
 
+The committed HTML at the repository root is the source of truth. The pages are
+maintained by editing the .html files directly. This script no longer reproduces
+that HTML: running it writes a different set of pages into this legacy/ folder,
+so it would silently conflict with what is live.
+
+It is kept only for reference. If the site is ever regenerated from a script
+again, the script must first be made to reproduce the committed HTML byte for
+byte, and that must be enforced in CI.
+
+Original notes:
 Each page is written as its own document. That is the point: a page cannot
 inherit the previous page's scroll offset if it is a different document, and
 every view gets a real URL a parent can be sent or can find on Google.
 
-Run:  python build.py
+Run (reference only):  python legacy/build.py
 """
 import io, os, json, re, datetime
 import login_template

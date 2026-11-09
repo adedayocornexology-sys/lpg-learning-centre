@@ -6,25 +6,29 @@ Odofin, Lagos.
 
 ## Build
 
-Eleven real HTML documents, generated from one shell and a content dict:
-
-```
-python build.py
-```
+Thirteen real HTML documents. There is **no build step** — the committed
+`.html` files are the source of truth. Edit them directly.
 
 Each page is its own document on purpose. A page cannot inherit the previous
 page's scroll offset if it is a different document, and every view gets a real
 URL a parent can be sent — or can find on Google, which is how a school is
 actually discovered.
 
+Deploy by pushing to `main`; Vercel builds from the repository. Do not use the
+dashboard upload or `vercel deploy` — that bypasses Git, and the live site would
+then serve something no commit describes.
+
+The old generator lives in `legacy/` and is not used. See `legacy/README.md`.
+
 ```
-build.py              the shell + all page content
+*.html                the pages (source of truth, hand-maintained)
 assets/app.css        design tokens, shell, components
 assets/layouts.css    layout set (bento, split, rowlist, stats, poster, stack),
                       photo slots, sidebar rail, tooltips
 assets/app.js         nav, breadcrumb, sidebar collapse, visit sheet, canvas hero
 assets/img/           the real logo, taken from the live site
 docs/ONTOLOGY.md      the nouns: object types, links, actions
+legacy/build.py       old generator — reference only, not used
 ```
 
 Serve it — do not open the files directly:
