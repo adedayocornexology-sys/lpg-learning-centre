@@ -206,7 +206,7 @@ SHELL = """<!doctype html>
     <div class="f"><label for="vWhen">When suits you?</label>
       <input id="vWhen" name="when" placeholder="e.g. Tuesday morning"></div>
     <div class="f"><label for="vStage">Which stage?</label>
-      <select id="vStage" name="stage"><option>Cr&egrave;che</option><option>Preschool</option><option>Nursery</option><option>Primary</option><option>Not sure yet</option></select></div>
+      <select id="vStage" name="stage"><option>Preschool</option><option>Nursery</option><option>Primary</option><option>Not sure yet</option></select></div>
     <button class="cta" type="submit">Send request {arrow}</button>
     <p class="fine" id="visitNote">We reply on WhatsApp, usually the same day.</p>
     </form>
@@ -243,13 +243,13 @@ PAGES = {}
 # ================================================================= HOME
 PAGES['index.html'] = dict(id='home',
   title="LPG Learning Centre — The Future Ready School, Festac",
-  desc="Crèche, preschool, nursery and primary school in Festac Town, Lagos. "
+  desc="Preschool, nursery and primary school in Festac Town, Lagos. "
        "Raising intelligent and creative children through project-based learning.",
   body="""
       <div class="hero"><div class="wrap">
         <div>
           <div class="eyebrow" style="margin-bottom:7px"><span>Welcome to LPG Learning Centre.</span></div>
-          <div class="eyebrow"><span>Cr&egrave;che</span><span>Preschool</span><span>Nursery</span><span>Primary</span></div>
+          <div class="eyebrow"><span>Preschool</span><span>Nursery</span><span>Primary</span></div>
           <div class="spine"><i class="l">Learn</i>, <i class="p">Play</i> &amp; <i class="g">Grow</i>.</div>
           <h1><span class="swipe">The future ready school.</span></h1>
           <p class="lede">To raise adaptable learners &mdash; grounded in technology, rich in creativity
@@ -267,7 +267,7 @@ PAGES['index.html'] = dict(id='home',
         <div class="scene"><canvas id="play"></canvas></div>
       </div></div>
 
-"
+"""
   + PURPOSE
   + """
       <div class="trust"><div class="wrap">
@@ -277,7 +277,6 @@ PAGES['index.html'] = dict(id='home',
           <b>The World Bank</b><span class="sep"></span>
           <b>Ideas-TVET</b>
         </div>
-      </div></div>""
       </div></div>"""
   + sect(head("The LPG advantage", "Give them the best start.<br>Watch them lead the way.",
               "Three things every child here gets, in the school&rsquo;s own words.") + ADVANTAGE, band=True)
@@ -301,7 +300,7 @@ PAGES['index.html'] = dict(id='home',
   + sect(head("Two ways in", "Who are you here for?")
          + '\n        <div class="doors">'
            '<a class="door r2" href="programmes.html"><div class="k">For parents</div>'
-           '<h3>A school for my child</h3><p>Cr&egrave;che through Primary in Festac Town, with small '
+           '<h3>A school for my child</h3><p>Preschool through Primary in Festac Town, with small '
            'classes and project-based lessons.</p><span class="arw">See the programmes ' + ARROW + '</span></a>'
            '<a class="door r3" href="eccd.html"><div class="k">For future teachers</div>'
            '<h3>Training to work with children</h3><p>A free six-month ECCD certification with the '
@@ -319,28 +318,19 @@ def stage(chip, colour, name, body, facts):
                colour, chip, name, body, "".join('<span>%s</span>' % f for f in facts)))
 
 PAGES['programmes.html'] = dict(id='programmes',
-  title="Programmes — Crèche to Primary | LPG Learning Centre, Festac",
-  desc="Four stages at LPG Learning Centre, Festac Town: crèche, preschool, nursery and primary.",
-  body=sect(head("Programmes", "Four stages, one approach.",
+  title="Programmes — Preschool to Primary | LPG Learning Centre, Festac",
+  desc="Three stages at LPG Learning Centre, Festac Town: preschool, nursery and primary.",
+  body=sect(head("Programmes", "Three stages, one approach.",
               "Each stage has its own room, its own rhythm and its own teachers &mdash; and the same "
               "belief about how children learn.")
     + """
         <div class="seg" data-seg="prog">
-          <button class="on" data-panel="creche">Cr&egrave;che</button>
-          <button data-panel="preschool">Preschool</button>
+          <button class="on" data-panel="preschool">Preschool</button>
           <button data-panel="nursery">Nursery</button>
           <button data-panel="primary">Primary</button>
         </div>
 
-        <div class="panel on" id="pan-creche"><div class="detail">
-          <div class="chip" style="background:var(--pink)">C</div>
-          <div><h3 style="font-family:var(--display);font-size:22px;margin-bottom:8px">Cr&egrave;che</h3>
-            <p style="color:var(--ink-soft);line-height:1.6">Settling in, safely. The first room a child
-              meets &mdash; warm, small and unhurried, with the same faces every day.</p>
-            <div class="facts"><span>Ages to confirm</span><span>Mon&ndash;Fri</span><span>Festac Town</span></div></div>
-        </div></div>
-
-        <div class="panel" id="pan-preschool"><div class="detail">
+        <div class="panel on" id="pan-preschool"><div class="detail">
           <div class="chip" style="background:var(--play)">P</div>
           <div><h3 style="font-family:var(--display);font-size:22px;margin-bottom:8px">Preschool</h3>
             <p style="color:var(--ink-soft);line-height:1.6">Play that teaches. Hands-on making and
@@ -393,7 +383,7 @@ PAGES['programmes.html'] = dict(id='programmes',
          + '\n        ' + QUICK + cta("Book a visit"), band=True)
   + sect(head("Questions", "Before you ask.")
          + faq(FAQ_KEYED("programmes", [("What ages do you take?",
-                 "Cr&egrave;che through Primary, up to Year 4. Age bands shift slightly by room, so they are "
+                 "Preschool through Primary, up to Year 4. Age bands shift slightly by room, so they are "
                  "confirmed on a visit."),
                 ("How big are the classes?",
                  "Deliberately small, so every child is known by name rather than by average."),
@@ -702,7 +692,7 @@ PAGES['story.html'] = dict(id='story',
               "Most schools do the first one. LPG does all three, which is why the building is "
               "busy outside class hours.")
          + rowlist(
-             row("A school", "Cr&egrave;che, Preschool, Nursery and Primary, in Festac Town.", "Mon&ndash;Fri"),
+             row("A school", "Preschool, Nursery and Primary, in Festac Town.", "Mon&ndash;Fri"),
              row("A training centre", "Free ECCD certification for Nigerian youths, with the Federal "
                  "Ministry of Education and the World Bank.", "Six months"),
              row("A parent community", "Seminars, live events and a weekly stream of things worth knowing.",
@@ -773,7 +763,7 @@ SCHOOL = {
     "@id": SITE + "/#school",
     "name": "LPG Learning Centre",
     "alternateName": "Learn Play Grow Learning Centre",
-    "description": "Cr\u00e8che, preschool, nursery and primary school in Festac Town, "
+    "description": "Preschool, nursery and primary school in Festac Town, "
                    "Amuwo Odofin, Lagos.",
     "url": SITE + "/",
     "logo": SITE + "/assets/img/lpg-logo.svg",
