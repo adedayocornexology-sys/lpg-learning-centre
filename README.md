@@ -20,6 +20,15 @@ then serve something no commit describes.
 
 The old generator lives in `legacy/` and is not used. See `legacy/README.md`.
 
+To check that what is live is exactly what is committed:
+
+```
+powershell -File scripts/verify-live.ps1
+```
+
+It compares all thirteen served pages byte-for-byte and exits non-zero if any
+page differs.
+
 ```
 *.html                the pages (source of truth, hand-maintained)
 assets/app.css        design tokens, shell, components
